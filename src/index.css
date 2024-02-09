@@ -98,11 +98,11 @@ button:focus-visible {
     margin: auto;
 }
 
+.file-upload-container {
+    display: flex;
+    align-items: center;
+}
 
-/*@media (min-width: 768px) {*/
-/*    .fc .fc-toolbar {*/
-/*        align-items: center;*/
-/*        display: flex;*/
-/*        justify-content: space-between;*/
-/*    }*/
-/*}*/
+.file-upload-container input[type="file"] {
+    margin-right: 10px; /* Adjust margin as needed */
+}

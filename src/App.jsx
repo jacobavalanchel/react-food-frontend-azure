@@ -44,12 +44,14 @@ function App() {
     return (
         //data binding
         <div className="App">
-            <input
-                ref={inputRef}
-                value={value}
-                type="text" />
-            <button onClick={handleUpload}>click im new button me</button>
-            <input type="file" onChange={handleFileChange} accept="image/gif,image/jpeg,image/jpg,image/png" multiple/>
+            <div className="file-upload-container">
+                <input
+                    ref={inputRef}
+                    value={value}
+                    type="text" />
+                <button onClick={handleUpload}>click im new button me</button>
+                <input type="file" onChange={handleFileChange} accept="image/gif,image/jpeg,image/jpg,image/png" multiple/>
+            </div>
         </div>
 
 
