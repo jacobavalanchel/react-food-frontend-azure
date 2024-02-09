@@ -1,66 +1,50 @@
-import React, {useRef, useState,ChangeEvent} from "react";
-
+import React, {useRef, useState, ChangeEvent} from "react";
+import './index.css'
+import {Container, Button, TextField} from "@mui/material";
+import Navbar from "./Navbar";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BottomNavigation, BottomNavigationAction } from "@mui/material";
+import Topbar from "./Topbar"
+import HomeIcon from "@mui/icons-material/Home";
+import InfoIcon from "@mui/icons-material/Info";
+import WorkIcon from "@mui/icons-material/Work";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import UploadPage from "./uploadPage.jsx";
+import HistoryPage from "./historyPage.jsx";
+import MyPage from "./myPage.jsx";
+import InfoPage from "./infoPage.jsx"
 function App() {
-    const [value, setValue]= useState('')
-    const [uploadedFile, setUploadedFile] = useState(null);
-    const [uploadResult, setUploadResult] = useState(null);
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        console.log('file changed');
-        setUploadedFile(file);
+
+    const [selectedSection, setSelectedSection] = useState("Home");
+
+    const handleSectionChange = (newSection) => {
+        console.log(newSection);
+        setSelectedSection(newSection);
     };
 
-    const handleUpload = async () => {
-        console.log("starting upload");
-        if (!uploadedFile) {
-            console.log('No file selected');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', uploadedFile);
-
-        try {
-            const response = await fetch('https://contosowebbackend20240207112230.azurewebsites.net/api/first/OnPostUpload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (response.ok) {
-                console.log('File uploaded successfully');
-            } else {
-                console.error('Failed to upload file');
-            }
-        } catch (error) {
-            console.error('Error uploading file:', error);
-        }
-    };
-
-    // get dom
-    const inputRef = useRef(null)
-    const showDom=()=>{
-        console.log(inputRef.current)
-    }
     return (
         //data binding
         <div className="App">
-            <div className="file-upload-container">
-                <input
-                    ref={inputRef}
-                    value={value}
-                    type="text" />
-                <button onClick={handleUpload}>click im new button me</button>
-                <input type="file" onChange={handleFileChange} accept="image/gif,image/jpeg,image/jpg,image/png" multiple/>
-            </div>
+
+            <Topbar/>
+            <Router>
+                <div>
+                    <Routes>
+                        <Route path="/" exact element={<UploadPage />} />
+                        <Route path="/about" element={<InfoPage />} />
+                        <Route path="/services" element={<HistoryPage />} />
+                        <Route path="/contact" element={<MyPage />} />
+                    </Routes>
+                    <BottomNavigation className="bottomNavigation">
+                        <BottomNavigationAction label="Home" icon={<HomeIcon />} href="/" />
+                        <BottomNavigationAction label="About" icon={<InfoIcon />} href="/about" />
+                        <BottomNavigationAction label="Services" icon={<WorkIcon />} href="/services" />
+                        <BottomNavigationAction label="Contact" icon={<ContactMailIcon />} href="/contact" />
+                    </BottomNavigation>
+                </div>
+            </Router>
         </div>
-
-
-
     );
-
-
-
-
 }
 
 export default App;
