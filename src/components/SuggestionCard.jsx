@@ -1,6 +1,5 @@
 import React from "react";
-import { FaStar } from "react-icons/fa";
-import toast from "react-hot-toast";
+import { ImQuotesLeft } from "react-icons/im";
 
 
 const SuggestionCard = ({id, title, content, fwlink}) =>{
