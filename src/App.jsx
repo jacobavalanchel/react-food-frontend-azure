@@ -9,10 +9,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import WorkIcon from "@mui/icons-material/Work";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
-import UploadPage from "./UploadPage.jsx";
-import HistoryPage from "./HistoryPage.jsx";
+import HomePage from "./HomePage.jsx";
+import MarketPage from "./MarketPage.jsx";
 import MyPage from "./MyPage.jsx";
-import InfoPage from "./InfoPage.jsx"
+import SuggestionPage from "./SuggestionPage.jsx"
 import {Toaster} from "react-hot-toast";
 
 
@@ -29,9 +29,9 @@ function App() {
                     <Router>
                         <div>
                             <Routes>
-                                <Route path="/" exact element={<UploadPage/>}/>
-                                <Route path="/about" element={<InfoPage/>}/>
-                                <Route path="/services" element={<HistoryPage/>}/>
+                                <Route path="/" exact element={<HomePage/>}/>
+                                <Route path="/about" element={<SuggestionPage/>}/>
+                                <Route path="/services" element={<MarketPage/>}/>
                                 <Route path="/contact" element={<MyPage/>}/>
                             </Routes>
                             <BottomNavigation className="bottomNavigation">

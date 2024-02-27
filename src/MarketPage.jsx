@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import ProductCard from './components/ProductCard.jsx'
-const HistoryPage = () => {
+const MarketPage = () => {
     const shopItems = [
         {
             id: 6,
@@ -71,4 +71,4 @@ const HistoryPage = () => {
     ;
 };
 
-export default HistoryPage;
+export default MarketPage;

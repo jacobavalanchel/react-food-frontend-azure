@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-const InfoPage = () => {
+const SuggestionPage = () => {
 
     return (
         <div>
@@ -9,4 +9,4 @@ const InfoPage = () => {
     );
 };
 
-export default InfoPage;
+export default SuggestionPage;

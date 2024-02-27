@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Container, TextField} from "@mui/material";
 
-const UploadPage = () => {
+const HomePage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [uploadResult, setUploadResult] = useState(null);
     const handleUpload = async () => {
@@ -56,4 +56,4 @@ const UploadPage = () => {
     );
 };
 
-export default UploadPage;
+export default HomePage;
