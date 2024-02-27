@@ -23,7 +23,7 @@ const ProductCard = ({id, name, price, imgpath, description}) =>{
     }
 
     return(
-        <div className="h-[370px] 2xl:h-[420px] text-black rounded-lg shadow-lg mb-2 cursor-pointer"
+        <div className="h-[370px] 2xl:h-[420px] text-black rounded-lg shadow-lg mb-2 cursor-pointer bg-lime-50 hover:bg-lime-100"
              key={id}
         >
             <div>
@@ -42,7 +42,7 @@ const ProductCard = ({id, name, price, imgpath, description}) =>{
 
                 <div className=" flex gap-8 pt-4">
                     <button
-                        className=" bg-ExtraDarkColor text-black px-4 py-2 font-medium active:bg-amber-800"
+                        className=" bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
                         onClick={addToCartOnTap}
                     >
                        添加至购物车

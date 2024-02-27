@@ -47,10 +47,10 @@ const MarketPage = () => {
     ];
 
     return (
-        <div className="min-h-screen flex flex-col justify-center pt-24">
+        <div className="min-h-screen flex flex-col justify-center my-20">
             {/* heading */}
             <h1 className="font-semibold text-3xl text-center text-black">
-                List of products
+                健康市场
             </h1>
             {/* card flow */}
             <div className="flex flex-wrap justify-center gap-5 pt-8">
