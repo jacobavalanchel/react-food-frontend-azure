@@ -9,10 +9,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import WorkIcon from "@mui/icons-material/Work";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
-import UploadPage from "./uploadPage.jsx";
-import HistoryPage from "./historyPage.jsx";
-import MyPage from "./myPage.jsx";
-import InfoPage from "./infoPage.jsx"
+import UploadPage from "./UploadPage.jsx";
+import HistoryPage from "./HistoryPage.jsx";
+import MyPage from "./MyPage.jsx";
+import InfoPage from "./InfoPage.jsx"
 function App() {
 
     const [selectedSection, setSelectedSection] = useState("Home");
