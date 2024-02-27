@@ -7,7 +7,7 @@ const Appbar = ({selectedSection}) => {
             <AppBar position="sticky">
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                        NutriDAIet
+                        AI健康助理
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
