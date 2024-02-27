@@ -34,13 +34,14 @@ function App() {
                                 <Route path="/services" element={<MarketPage/>}/>
                                 <Route path="/contact" element={<MyPage/>}/>
                             </Routes>
+                        </div>
                             <BottomNavigation className="bottomNavigation">
                                 <BottomNavigationAction label="Home" icon={<HomeIcon/>} href="/"/>
                                 <BottomNavigationAction label="About" icon={<InfoIcon/>} href="/about"/>
                                 <BottomNavigationAction label="Services" icon={<WorkIcon/>} href="/services"/>
                                 <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} href="/contact"/>
                             </BottomNavigation>
-                        </div>
+
                     </Router>
             </div>
         </React.Fragment>
