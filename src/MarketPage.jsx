@@ -53,10 +53,10 @@ const MarketPage = () => {
                 健康市场
             </h1>
             {/* card flow */}
-            <div className="flex flex-wrap justify-center gap-5 pt-8">
+            <div className="flex flex-wrap md:flex-wrap justify-center md:pt-8">
                 {shopItems.map((item) =>
                     (
-                    <div key={item.id} className="md:w-2/4 lg:w-1/4">
+                    <div key={item.id} className="w-2/4 md:w-2/4 lg:w-1/4">
                 <ProductCard key={item.id}
                              id={item.id}
                              imgpath={item.img}

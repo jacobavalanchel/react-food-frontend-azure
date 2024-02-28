@@ -15,10 +15,6 @@ const MyPage = () => {
                     </h1>
                     <Avatar alt="Personal icon" src="/src/assets/react.svg" />
                     <div className="w-3/4 flex flex-row gap-2 justify-center items-center">
-
-
-
-
                     </div>
                 </div>
             </div>

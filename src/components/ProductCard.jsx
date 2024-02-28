@@ -23,7 +23,7 @@ const ProductCard = ({id, name, price, imgpath, description}) =>{
     }
 
     return(
-        <div className="h-[370px] 2xl:h-[420px] text-black rounded-lg shadow-lg mb-2 cursor-pointer bg-lime-50 hover:bg-lime-100"
+        <div className="h-[370px] 2xl:h-[420px] text-black rounded-lg shadow-lg m-1 cursor-pointer bg-lime-50 hover:bg-lime-100"
              key={id}
         >
             <div>
