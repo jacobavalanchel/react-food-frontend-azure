@@ -21,8 +21,9 @@ function App() {
         <React.Fragment>
             <CssBaseline/>
             {/*//data binding*/}
-            <div className="App">
-                    <Topbar/>
+            <Topbar/>
+            <div className="App pb-10">
+
                     <Toaster
                         position="top-center"
                     />

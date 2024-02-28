@@ -23,6 +23,7 @@ const HomePage = () => {
 
             if (response.ok) {
                 console.log('File uploaded successfully');
+                console.log(response);
                 setUploadResult(true);
             } else {
                 console.error('Failed to upload file');
@@ -37,6 +38,7 @@ const HomePage = () => {
         console.log('file changed');
         setUploadedFile(file);
     };
+
     return (
         <div>
             <div className="min-h-screen px-2 flex flex-col justify-center my-20">
