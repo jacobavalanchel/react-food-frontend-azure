@@ -1,8 +1,12 @@
 {
     "navigationFallback": {
-        "rewrite": "/index.html"
+        "rewrite": "/index.html",
+        "exclude": ["/src/assets/img/*.{png,jpg,gif}", "/css/*"]
     },
     "platform": {
         "apiRuntime": "node:18"
+    },
+    "mimeTypes": {
+        ".json": "text/json"
     }
 }
