@@ -36,6 +36,7 @@ const ProductCard = ({id, name, price, imgpath, description}) => {
 
                 <div className="gap-1 flex flex-col items-center justify-center">
                     <h1 className=" font-semibold text-lg pt-4">{name}</h1>
+                    <h2 className=" font-normal text-sm pt-4">根据您{description}的情况推荐</h2>
                     <div className="flex flex-row items-center justify-center">
                         <h2 className=" font-medium text-lg ">￥{price}</h2>
                         <IconButton color="primary" aria-label="add to shopping cart" onClick={addToCartOnTap}>

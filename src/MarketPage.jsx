@@ -24,6 +24,7 @@ const MarketPage = () => {
             name: "富硒地瓜",
             price: "104.00",
             discount: "35% Off",
+            description:"老年人群"
         },
         {
             id: 9,
@@ -31,6 +32,7 @@ const MarketPage = () => {
             name: "特色菠萝蜜",
             price: "299.00",
             discount: "40% Off",
+            description:"精神压力大"
         },
         {
             id: 10,
@@ -38,6 +40,7 @@ const MarketPage = () => {
             name: "养生枸杞",
             price: "129.00",
             discount: "28% Off",
+            description:"钙流失"
         },
         {
             id: 11,
@@ -45,6 +48,7 @@ const MarketPage = () => {
             name: "野生灵芝",
             price: "189.00",
             discount: "30% Off",
+            description:"睡眠不好"
         },
     ];
 
@@ -64,7 +68,7 @@ const MarketPage = () => {
                              imgpath={item.img}
                              name={item.name}
                              price={item.price}
-                             description={item.name}/>
+                             description={item.description}/>
             </div>
             ))}
         </div>
