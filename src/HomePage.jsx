@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Container, TextField} from "@mui/material";
-import {FaStar} from "react-icons/fa";
+
 
 const HomePage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -45,7 +45,7 @@ const HomePage = () => {
                     主页
                 </h1>
                 <div
-                    className="h-[370px] 2xl:h-[420px] text-black flex flex-col justify-around items-center rounded-lg shadow-lg mt-10 mb-20 cursor-pointer bg-lime-50 hover:bg-lime-100">
+                    className="h-[370px] md:h-[420px] text-black flex flex-col justify-around items-center rounded-lg shadow-lg mt-10 mb-20 cursor-pointer bg-lime-50 hover:bg-lime-100">
                     {/*<div>*/}
                     {/*    <img*/}
                     {/*        src=""*/}
