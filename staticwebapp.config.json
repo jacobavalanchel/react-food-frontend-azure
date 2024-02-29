@@ -1,7 +1,7 @@
 {
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["/public/*.{png,ico,jpg,gif}","/src/assets/img/*.{png,jpg,gif}", "/css/*"]
+        "exclude": ["*.{css,scss,js,png,gif,ico,jpg,svg}", "/css/*"]
     },
     "platform": {
         "apiRuntime": "node:18"
