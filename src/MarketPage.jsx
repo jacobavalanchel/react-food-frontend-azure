@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import ProductCard from './components/ProductCard.jsx'
+import {Card, CardMedia, Typography} from "@mui/material";
+
 const MarketPage = () => {
     const shopItems = [
         {
@@ -58,6 +60,7 @@ const MarketPage = () => {
             <h1 className="font-semibold text-3xl text-center text-black">
                 健康助农市场
             </h1>
+
             {/* card flow */}
             <div className="flex flex-wrap md:flex-wrap justify-center md:pt-8">
                 {shopItems.map((item) =>
