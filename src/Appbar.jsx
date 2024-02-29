@@ -1,6 +1,6 @@
 import React from "react";
-import {AppBar, Toolbar, Typography, Button, Box} from "@mui/material";
-
+import {AppBar, Toolbar, Typography, Button, Box, IconButton} from "@mui/material";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const Appbar = ({selectedSection}) => {
     return (
 
@@ -9,7 +9,9 @@ const Appbar = ({selectedSection}) => {
                     <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                         AI健康助理
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <IconButton aria-label="login">
+                        <AccountCircleIcon />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
