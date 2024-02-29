@@ -6,7 +6,7 @@ const MarketPage = () => {
     const shopItems = [
         {
             id: 6,
-            img: "/src/assets/img/product1.png",
+            img: "/assets/img/product1.png",
             name: "健康黄皮水果",
             price: "34.00",
             discount: "24% Off",
@@ -14,7 +14,7 @@ const MarketPage = () => {
         },
         {
             id: 7,
-            img: "/src/assets/img/product2.png",
+            img: "/assets/img/product2.png",
             name: "生态莲雾",
             price: "258.00",
             discount: "40% Off",
@@ -22,7 +22,7 @@ const MarketPage = () => {
         },
         {
             id: 8,
-            img: "/src/assets/img/product3.png",
+            img: "/assets/img/product3.png",
             name: "富硒地瓜",
             price: "104.00",
             discount: "35% Off",
@@ -30,7 +30,7 @@ const MarketPage = () => {
         },
         {
             id: 9,
-            img: "/src/assets/img/product4.png",
+            img: "/assets/img/product4.png",
             name: "特色菠萝蜜",
             price: "299.00",
             discount: "40% Off",
@@ -38,7 +38,7 @@ const MarketPage = () => {
         },
         {
             id: 10,
-            img: "/src/assets/img/product5.png",
+            img: "/assets/img/product5.png",
             name: "养生枸杞",
             price: "129.00",
             discount: "28% Off",
@@ -46,7 +46,7 @@ const MarketPage = () => {
         },
         {
             id: 11,
-            img: "/src/assets/img/product6.png",
+            img: "/assets/img/product6.png",
             name: "野生灵芝",
             price: "189.00",
             discount: "30% Off",

@@ -83,7 +83,7 @@ const HomePage = () => {
                         </Button>
                     </div>
                         <img
-                            src="src/assets/img/result-1.jpg"
+                            src="/assets/img/result-1.jpg"
                             alt="img"
                             className="rounded-t-xl w-full object-cover"
                         />
