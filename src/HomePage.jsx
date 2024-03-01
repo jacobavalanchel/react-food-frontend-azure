@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Container, TextField} from "@mui/material";
-import {FaStar} from "react-icons/fa";
+
 
 const HomePage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -16,7 +16,7 @@ const HomePage = () => {
         formData.append('file', uploadedFile);
 
         try {
-            const response = await fetch('https://contosowebbackend20240207112230.azurewebsites.net/api/first/OnPostUpload', {
+            const response = await fetch('https://nutridaietwebbackend.azurewebsites.net/api/first/OnPostUpload', {
                 method: 'POST',
                 body: formData,
             });
@@ -47,7 +47,7 @@ const HomePage = () => {
                     主页
                 </h1>
                 <div
-                    className="h-[370px] 2xl:h-[420px] text-black flex flex-col justify-around items-center rounded-lg shadow-lg mt-10 mb-20 cursor-pointer bg-lime-50 hover:bg-lime-100">
+                    className="py-5 text-black flex flex-col flex-nowrap justify-begin items-center rounded-lg shadow-lg mt-10 cursor-pointer bg-lime-50 hover:bg-lime-100">
                     {/*<div>*/}
                     {/*    <img*/}
                     {/*        src=""*/}
@@ -57,6 +57,9 @@ const HomePage = () => {
                     {/*</div>*/}
                     <h2 className=" font-normal text-2xl text-center text-black">
                         拍照食品健康助手
+                    </h2>
+                    <h2 className=" font-normal text-xl text-center text-black">
+                        识别结果：三明治沙拉
                     </h2>
                     <div className="w-3/4 flex flex-row gap-2 justify-center items-center">
 
@@ -80,9 +83,20 @@ const HomePage = () => {
                         >
                             上传所选
                         </Button>
-
-
                     </div>
+                        <img
+                            src="/assets/img/result-1.jpg"
+                            alt="img"
+                            className="rounded-t-xl w-full object-cover"
+                        />
+                    <h2 className=" font-normal text-xl text-center text-black">
+                        此食品的营养信息：
+                        1. 245 KCal\n
+                        2. 特殊营养素：麦麸质\n
+                        适宜人群：高糖代谢人群\n
+                        不适宜人群：消化不良人群
+
+                    </h2>
                 </div>
             </div>
         </div>
