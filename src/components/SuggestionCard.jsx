@@ -22,7 +22,7 @@ const SuggestionCard = ({id, imagepath, title, subtitle, content, fwlink}) => {
                     image={imagepath}
                     alt="recommendation-image"
                 />
-                <CardContent>
+                <CardContent className="bg-lime-50 active:bg-lime-100">
                     <Typography gutterBottom variant="h5" component="div">
                         {title}
                     </Typography>
@@ -33,6 +33,7 @@ const SuggestionCard = ({id, imagepath, title, subtitle, content, fwlink}) => {
                             <ListItem className="flex-col">
                                 {content.map((item) => (
                                     <ListItemText
+                                        key={item.primary}
                                         primary={item.primary}
                                         secondary={item.secondary}
                                     />))}
