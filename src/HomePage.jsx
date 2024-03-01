@@ -1,10 +1,19 @@
 import React, {useState} from 'react';
-import {Button, Container, TextField} from "@mui/material";
+import {Button, Container, List, ListItem, ListItemText, TextField} from "@mui/material";
+import {ImQuotesLeft} from "react-icons/im";
 
 
 const HomePage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [uploadResult, setUploadResult] = useState(null);
+    const content = [
+        {primary: "能量", secondary: "245 KCal/500g"},
+        {primary: "不适宜人群", secondary: "消化不良人群"},
+        {primary: "适宜人群", secondary: "高糖代谢人群"},
+        {primary: "特殊营养素", secondary: "麦麸质"},
+        {primary: "功效", secondary: "养胃健脾"},
+    ];
+
     const handleUpload = async () => {
         console.log("starting upload");
         if (!uploadedFile) {
@@ -58,9 +67,7 @@ const HomePage = () => {
                     <h2 className=" font-normal text-2xl text-center text-black">
                         拍照食品健康助手
                     </h2>
-                    <h2 className=" font-normal text-xl text-center text-black">
-                        识别结果：三明治沙拉
-                    </h2>
+
                     <div className="w-3/4 flex flex-row gap-2 justify-center items-center">
 
                         <Button
@@ -84,19 +91,36 @@ const HomePage = () => {
                             上传所选
                         </Button>
                     </div>
-                        <img
-                            src="/assets/img/result-1.jpg"
-                            alt="img"
-                            className="rounded-t-xl w-full object-cover"
-                        />
-                    <h2 className=" font-normal text-xl text-center text-black">
-                        此食品的营养信息：
-                        1. 245 KCal\n
-                        2. 特殊营养素：麦麸质\n
-                        适宜人群：高糖代谢人群\n
-                        不适宜人群：消化不良人群
+                    <img
+                        src="/assets/img/result-1.jpg"
+                        alt="img"
+                        className="max-h-50 rounded-t-xl w-full object-cover"
+                    />
 
-                    </h2>
+                    <div
+                        className=" flex flex-col w-3/4 md:w-2/6 lg:w-1/4 border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
+                        <div>
+                            <ImQuotesLeft size={25}/>
+                            <h1 className=" text-xl font-semibold text-ExtraDarkColor">
+                                识别结果：三明治沙拉
+                            </h1>
+                            <h2 className=" font-normal text-xl text-left text-black">
+                                营养信息
+                            </h2>
+                        </div>
+
+
+                        <List dense="true">
+                            <ListItem className="flex-col items-start">
+                                {content.map((item) => (
+                                    <ListItemText
+                                        key={item.primary}
+                                        primary={item.primary}
+                                        secondary={item.secondary}
+                                    />))}
+                            </ListItem>
+                        </List>
+                    </div>
                 </div>
             </div>
         </div>
