@@ -17,6 +17,7 @@ import {Toaster} from "react-hot-toast";
 
 
 function App() {
+    const [currentTab, setCurrentTab] = React.useState(0);
     return (
         <React.Fragment>
             <CssBaseline/>
@@ -37,7 +38,11 @@ function App() {
                     </Routes>
                 </Router>
             </div>
-                <BottomNavigation className="bottomNavigation">
+                <BottomNavigation
+                    className="bottomNavigation"
+                    value={currentTab}
+                    onChange={(event,newValue)=>{setCurrentTab(newValue);console.log(newValue);}}
+                >
                     <BottomNavigationAction label="Home" icon={<HomeIcon/>} href="/"/>
                     <BottomNavigationAction label="About" icon={<InfoIcon/>} href="/about"/>
                     <BottomNavigationAction label="Services" icon={<WorkIcon/>} href="/services"/>
