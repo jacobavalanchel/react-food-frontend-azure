@@ -22,29 +22,28 @@ function App() {
             <CssBaseline/>
             {/*//data binding*/}
             <Topbar/>
+
+
+            <Toaster
+                position="top-center"
+            />
             <div className="App pb-10">
-
-                    <Toaster
-                        position="top-center"
-                    />
-                    <Router>
-                        <div>
-                            <Routes>
-                                <Route path="/" exact element={<HomePage/>}/>
-                                <Route path="/about" element={<SuggestionPage/>}/>
-                                <Route path="/services" element={<MarketPage/>}/>
-                                <Route path="/contact" element={<MyPage/>}/>
-                            </Routes>
-                        </div>
-                            <BottomNavigation className="bottomNavigation">
-                                <BottomNavigationAction label="Home" icon={<HomeIcon/>} href="/"/>
-                                <BottomNavigationAction label="About" icon={<InfoIcon/>} href="/about"/>
-                                <BottomNavigationAction label="Services" icon={<WorkIcon/>} href="/services"/>
-                                <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} href="/contact"/>
-                            </BottomNavigation>
-
-                    </Router>
+                <Router>
+                    <Routes>
+                        <Route path="/" exact element={<HomePage/>}/>
+                        <Route path="/about" element={<SuggestionPage/>}/>
+                        <Route path="/services" element={<MarketPage/>}/>
+                        <Route path="/contact" element={<MyPage/>}/>
+                    </Routes>
+                </Router>
             </div>
+                <BottomNavigation className="bottomNavigation">
+                    <BottomNavigationAction label="Home" icon={<HomeIcon/>} href="/"/>
+                    <BottomNavigationAction label="About" icon={<InfoIcon/>} href="/about"/>
+                    <BottomNavigationAction label="Services" icon={<WorkIcon/>} href="/services"/>
+                    <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} href="/contact"/>
+                </BottomNavigation>
+
         </React.Fragment>
     );
 }
