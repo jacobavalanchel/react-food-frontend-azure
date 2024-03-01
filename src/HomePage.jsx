@@ -16,7 +16,7 @@ const HomePage = () => {
         formData.append('file', uploadedFile);
 
         try {
-            const response = await fetch('https://contosowebbackend20240207112230.azurewebsites.net/api/first/OnPostUpload', {
+            const response = await fetch('https://nutridaietwebbackend.azurewebsites.net/api/first/OnPostUpload', {
                 method: 'POST',
                 body: formData,
             });
