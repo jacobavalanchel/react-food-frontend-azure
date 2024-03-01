@@ -4,15 +4,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import {Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
 
 const ProductCard = ({id, name, price, imgpath, description}) => {
-    const addToCart = new Promise((resolve, reject) => {
 
-        setTimeout(() => {
-            console.log("resolved");
-            resolve();
-
-        }, 2000);
-
-    })
     const addToCartOnTap = () => {
         // console.log("tapped");
         // toast.promise(addToCart,

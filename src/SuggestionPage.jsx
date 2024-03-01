@@ -46,7 +46,7 @@ const SuggestionPage = () => {
                 className=" flex flex-col flex-wrap  items-center md:items-start md:flex-row gap-5 justify-center py-4 my-8">
                 {
                     suggestionContents.map((suggestion) => (
-                        <SuggestionCard imagepath={suggestion.imagepath} title={suggestion.title}
+                        <SuggestionCard key={suggestion.id} imagepath={suggestion.imagepath} title={suggestion.title}
                                         subtitle={suggestion.subtitle} id={suggestion.id} content={suggestion.content}/>
                     ))
                 }

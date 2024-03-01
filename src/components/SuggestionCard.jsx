@@ -29,7 +29,7 @@ const SuggestionCard = ({id, imagepath, title, subtitle, content, fwlink}) => {
                     <Typography gutterBottom variant="h6" color="text.secondary" component="div">
                         根据您{subtitle}的情况
                     </Typography>
-                        <List dense="true">
+                        <List dense="True">
                             <ListItem className="flex-col">
                                 {content.map((item) => (
                                     <ListItemText
