@@ -1,7 +1,7 @@
 import React from "react";
 import toast from "react-hot-toast";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import {IconButton} from "@mui/material";
+import {Button, Card, CardActionArea, CardActions, CardContent, CardMedia, IconButton, Typography} from "@mui/material";
 
 const ProductCard = ({id, name, price, imgpath, description}) => {
     const addToCart = new Promise((resolve, reject) => {
@@ -23,10 +23,10 @@ const ProductCard = ({id, name, price, imgpath, description}) => {
     }
 
     return (
+
         <div className="text-black rounded-lg shadow-lg m-1 cursor-pointer bg-lime-50 hover:bg-lime-100"
              key={id}
         >
-
             <div className=" flex flex-col justify-center items-center">
                 <img
                     src={imgpath}
