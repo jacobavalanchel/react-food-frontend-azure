@@ -53,7 +53,7 @@ function App() {
                     console.log(newValue);
                 }}
             >
-                <BottomNavigationAction label="Home" icon={<HomeIcon/>} onClick={()=>navigate("/home")}/>
+                <BottomNavigationAction label="Home" icon={<HomeIcon/>} onClick={()=>navigate("/")}/>
                 <BottomNavigationAction label="About" icon={<InfoIcon/>} onClick={()=>navigate("/about")}/>
                 <BottomNavigationAction label="Services" icon={<WorkIcon/>} onClick={()=>navigate("/services")}/>
                 <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} onClick={()=>navigate("/contact")}/>
