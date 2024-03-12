@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, Container, List, ListItem, ListItemText, TextField} from "@mui/material";
 import {ImQuotesLeft} from "react-icons/im";
 
@@ -6,6 +6,8 @@ import {ImQuotesLeft} from "react-icons/im";
 const HomePage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [uploadResult, setUploadResult] = useState(null);
+    const [loading,setLoading] = useState(true);
+    const [image, setImage] = useState("/assets/img/result-1.jpg");
     const content = [
         {primary: "能量", secondary: "245 KCal/500g"},
         {primary: "不适宜人群", secondary: "消化不良人群"},
@@ -13,6 +15,17 @@ const HomePage = () => {
         {primary: "特殊营养素", secondary: "麦麸质"},
         {primary: "功效", secondary: "养胃健脾"},
     ];
+
+    function handleUploadPromise(trial){
+        return new Promise((resolve, reject)=>{
+            setTimeout(resolve,1000,trial);
+        });
+    }
+
+
+    const handleonClick=()=>{
+        handleUploadPromise("trialcontent").then((value)=>{console.log(value)})
+    };
 
     const handleUpload = async () => {
         console.log("starting upload");
@@ -47,6 +60,10 @@ const HomePage = () => {
         console.log('file changed');
         setUploadedFile(file);
     };
+
+    const handleDownload=(event)=> {
+        setImage("http://127.0.0.1:5000/get_image")
+    }
 
     return (
         <div>
@@ -90,9 +107,16 @@ const HomePage = () => {
                         >
                             上传所选
                         </Button>
+                        <Button
+                            variant="outlined"
+                            className="bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
+                            onClick={handleonClick}
+                        >
+                            getFile
+                        </Button>
                     </div>
                     <img
-                        src="/assets/img/result-1.jpg"
+                        src={image}
                         alt="img"
                         className="max-h-50 rounded-t-xl w-full object-cover"
                     />
