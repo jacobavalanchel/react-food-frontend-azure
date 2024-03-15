@@ -30,8 +30,6 @@ function App() {
             <CssBaseline/>
             {/*//data binding*/}
             <Topbar/>
-
-
             <Toaster
                 position="top-center"
             />
