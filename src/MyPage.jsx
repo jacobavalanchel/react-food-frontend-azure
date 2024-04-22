@@ -36,17 +36,6 @@ const MyPage = () => {
             {key: 2, title: '高血压患者'},
             {key: 3, title: '注重精神健康'},
             {key: 4, title: '爱吃面食'},]);
-    const handleLabelDataDelete = (labelToDelete) => () => {
-        setLabelData((labels) => labels.filter((label) => label.key !== labelToDelete.key));
-    };
-    // const handleLabelAdd = (newLabel) => {
-    //     const updatedLabelData = [
-    //         ...labelData,
-    //         { key: labelData.length, title: newLabel }
-    //     ];
-    //     setLabelData(updatedLabelData);
-    //     setIsNewLabelOpen(false);
-    // };
     const handleSubmit = () => {
         if(inputValue!==undefined){
             console.log('Submitted Values:', inputValue);
@@ -67,12 +56,9 @@ const MyPage = () => {
     function handleLabelInputOpen() {
         setIsNewLabelOpen(true);
     }
+    function handleLabelClick(data) {
 
-    function handleInputValueChange(newInputValue) {
-        console.log(newInputValue);
-        setInputValue(newInputValue);
     }
-
     return (
 
         <div className="flex flex-col justify-center">
@@ -121,7 +107,7 @@ const MyPage = () => {
                     </Dialog>
                     <Box sx={{display: 'flex'}}>
 
-                            <Button color="secondary" onClick={handleLabelInputOpen}>编辑</Button>
+                            <Button color="secondary" variant="outlined" onClick={handleLabelInputOpen}>编辑</Button>
                     </Box>
                     <div className="flex w-80 flex-row flex-wrap items-center justify-center gap-2">
                         {!isNewLabelOpen && labelData.map((data) => {
@@ -129,6 +115,7 @@ const MyPage = () => {
                                 <Chip
                                     key={data.key}
                                     label={data.title}
+                                    onClick={()=>handleLabelClick(data)}
                                 />
                             );
                         })}
