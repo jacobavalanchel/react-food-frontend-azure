@@ -1,30 +1,34 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Button, Container, List, ListItem, ListItemText, TextField} from "@mui/material";
 import {ImQuotesLeft} from "react-icons/im";
-
+import {
+    Alert, Checkbox, CircularProgress, FormControlLabel, Snackbar, Typography,
+} from "@mui/material";
 
 const HomePage = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [uploadResult, setUploadResult] = useState(null);
-    const [loading,setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [image, setImage] = useState("/assets/img/result-1.jpg");
-    const content = [
-        {primary: "能量", secondary: "245 KCal/500g"},
-        {primary: "不适宜人群", secondary: "消化不良人群"},
-        {primary: "适宜人群", secondary: "高糖代谢人群"},
-        {primary: "特殊营养素", secondary: "麦麸质"},
-        {primary: "功效", secondary: "养胃健脾"},
-    ];
+    const content = [{primary: "能量", secondary: "245 KCal/500g"}, {
+        primary: "不适宜人群",
+        secondary: "消化不良人群"
+    }, {primary: "适宜人群", secondary: "高糖代谢人群"}, {primary: "特殊营养素", secondary: "麦麸质"}, {
+        primary: "功效",
+        secondary: "养胃健脾"
+    },];
 
-    function handleUploadPromise(trial){
-        return new Promise((resolve, reject)=>{
-            setTimeout(resolve,1000,trial);
+    function handleUploadPromise(trial) {
+        return new Promise((resolve, reject) => {
+            setTimeout(resolve, 1000, trial);
         });
     }
 
 
-    const handleonClick=()=>{
-        handleUploadPromise("trialcontent").then((value)=>{console.log(value)})
+    const handleonClick = () => {
+        handleUploadPromise("trialcontent").then((value) => {
+            console.log(value)
+        })
     };
 
     const handleUpload = async () => {
@@ -38,15 +42,16 @@ const HomePage = () => {
         formData.append('file', uploadedFile);
 
         try {
-            const response = await fetch('https://nutridaietwebbackend.azurewebsites.net/api/first/OnPostUpload', {
-                method: 'POST',
-                body: formData,
+            const response = await fetch('http://127.0.0.1:5000/get_image', {
+                method: 'POST', body: formData,
             });
 
             if (response.ok) {
                 console.log('File uploaded successfully');
                 console.log(response);
                 setUploadResult(true);
+
+
             } else {
                 console.error('Failed to upload file');
                 setUploadResult(false);
@@ -61,12 +66,35 @@ const HomePage = () => {
         setUploadedFile(file);
     };
 
-    const handleDownload=(event)=> {
-        setImage("http://127.0.0.1:5000/get_image")
+
+    const handleFetchImage = async (filename) => {
+        alert("button pressed");
+        const formData = new FormData();
+        formData.append("file_name", filename);
+        const requestOptions = {
+            method: "POST", body: formData,
+        };
+        const res = await fetch("http://127.0.0.1:5000/get_image", requestOptions);
+        const imageBlob = await res.blob();
+        const imageObjectURL = URL.createObjectURL(imageBlob);
+        setImage(imageObjectURL);
+    };
+    const handleDownload = async (event) => {
+        // trigger detect
+        const triggerFormData = new FormData();
+        triggerFormData.append('name', "trialname");
+        const data = fetch('http://127.0.0.1:5000/start_recog', {
+            method: 'POST', body: triggerFormData,
+
+        }).then((response) => response.json())
+            .then((data) => {
+                console.log(data['filename'])
+                handleFetchImage(data['filename'])
+            });
+
     }
 
-    return (
-        <div>
+    return (<div>
             <div className="min-h-screen px-2 flex flex-col justify-center my-20">
                 {/* heading */}
                 <h1 className="font-semibold text-3xl text-center text-black">
@@ -110,8 +138,9 @@ const HomePage = () => {
                         <Button
                             variant="outlined"
                             className="bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
-                            onClick={handleonClick}
+                            onClick={handleDownload}
                         >
+                            {loading && <CircularProgress size={24} />}
                             getFile
                         </Button>
                     </div>
@@ -136,19 +165,17 @@ const HomePage = () => {
 
                         <List dense="true">
                             <ListItem className="flex-col items-start">
-                                {content.map((item) => (
-                                    <ListItemText
-                                        key={item.primary}
-                                        primary={item.primary}
-                                        secondary={item.secondary}
-                                    />))}
+                                {content.map((item) => (<ListItemText
+                                    key={item.primary}
+                                    primary={item.primary}
+                                    secondary={item.secondary}
+                                />))}
                             </ListItem>
                         </List>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        </div>);
 };
 
 export default HomePage;
