@@ -1,15 +1,7 @@
-import React, {useRef, useState, ChangeEvent} from "react";
+import React from "react";
 import './index.css'
-import {Container, Button, TextField, CssBaseline, Box} from "@mui/material";
-import Navbar from "./Navbar";
-import {
-    BrowserRouter as Router,
-    Route,
-    Routes,
-    Link,
-    useNavigate
-} from "react-router-dom";
-import {BottomNavigation, BottomNavigationAction} from "@mui/material";
+import {BottomNavigation, BottomNavigationAction, CssBaseline} from "@mui/material";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import Topbar from "./Appbar.jsx"
 import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
@@ -22,10 +14,9 @@ import SuggestionPage from "./SuggestionPage.jsx"
 import {Toaster} from "react-hot-toast";
 
 function App() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const [currentTab, setCurrentTab] = React.useState(0);
-    return (
-        // <Router>
+    return (// <Router>
         <React.Fragment>
             <CssBaseline/>
             {/*//data binding*/}
@@ -35,12 +26,12 @@ function App() {
             />
             <div className="App pb-10">
 
-                    <Routes>
-                        <Route path="/" exact element={<HomePage/>}/>
-                        <Route path="/about" element={<SuggestionPage/>}/>
-                        <Route path="/services" element={<MarketPage/>}/>
-                        <Route path="/contact" element={<MyPage/>}/>
-                    </Routes>
+                <Routes>
+                    <Route path="/" exact element={<HomePage/>}/>
+                    <Route path="/about" element={<SuggestionPage/>}/>
+                    <Route path="/services" element={<MarketPage/>}/>
+                    <Route path="/contact" element={<MyPage/>}/>
+                </Routes>
 
             </div>
             <BottomNavigation
@@ -51,15 +42,15 @@ function App() {
                     console.log(newValue);
                 }}
             >
-                <BottomNavigationAction label="Home" icon={<HomeIcon/>} onClick={()=>navigate("/")}/>
-                <BottomNavigationAction label="About" icon={<InfoIcon/>} onClick={()=>navigate("/about")}/>
-                <BottomNavigationAction label="Services" icon={<WorkIcon/>} onClick={()=>navigate("/services")}/>
-                <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} onClick={()=>navigate("/contact")}/>
+                <BottomNavigationAction label="Home" icon={<HomeIcon/>} onClick={() => navigate("/")}/>
+                <BottomNavigationAction label="About" icon={<InfoIcon/>} onClick={() => navigate("/about")}/>
+                <BottomNavigationAction label="Services" icon={<WorkIcon/>} onClick={() => navigate("/services")}/>
+                <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} onClick={() => navigate("/contact")}/>
             </BottomNavigation>
 
         </React.Fragment>
         // </Router>
-);
+    );
 }
 
 export default App;
