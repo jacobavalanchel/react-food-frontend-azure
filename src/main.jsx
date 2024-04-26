@@ -7,6 +7,7 @@ import SuggestionPage from "./SuggestionPage.jsx";
 import MarketPage from "./MarketPage.jsx";
 import MyPage from "./MyPage.jsx";
 import {CssBaseline} from "@mui/material";
+import CollapsibleTable from "./newForm.jsx";
 
 const router = createBrowserRouter([
         {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
       <CssBaseline/>
-      <RouterProvider router={router}/>
+      {/*<RouterProvider router={router}/>*/}
+      <CollapsibleTable/>
   </React.StrictMode>,
 )
