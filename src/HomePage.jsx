@@ -12,7 +12,7 @@ import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import * as PropTypes from "prop-types";
 import { ImQuotesLeft } from "react-icons/im";
-
+import DetailForm from "./components/DetailForm.jsx";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -27,17 +27,31 @@ const HomePage = () => {
   const [uploadResult, setUploadResult] = useState(null);
   const [loading, setLoading] = useState(true);
   const [image, setImage] = useState("/assets/img/result-1.jpg");
-  const content = [
-    { primary: "能量", secondary: "245 KCal/500g" },
+
+  const detailFormData = [
     {
-      primary: "不适宜人群",
-      secondary: "消化不良人群",
+      name: "能量供给",
+      score: 3.5,
+      scoreLabel: "比较建议",
+      scoreText: "这个食品非常适合你吃",
+      RowLabels: ["项目", "当前值", "建议值", "单位"],
+      RowContents: [
+        ["碳水化合物", 6, 12, "mg"],
+        ["脂肪", 6, 12, "mg"],
+        ["蛋白质", 6, 12, "mg"],
+      ],
     },
-    { primary: "适宜人群", secondary: "高糖代谢人群" },
-    { primary: "特殊营养素", secondary: "麦麸质" },
     {
-      primary: "功效",
-      secondary: "养胃健脾",
+      name: "糖代谢",
+      score: 4.5,
+      scoreLabel: "适合",
+      scoreText: "这个食品糖:",
+      RowLabels: ["项目", "当前值", "建议值", "单位"],
+      RowContents: [
+        ["纤维素", 6, 12, "mg"],
+        ["游离糖", 6, 12, "mg"],
+        ["GI数", 6, 12, "mg"],
+      ],
     },
   ];
   const handleUpload = async () => {
@@ -145,7 +159,7 @@ const HomePage = () => {
               className="max-h-50 rounded-t-xl w-full object-cover"
             />
 
-            <div className=" flex flex-col w-3/4 md:w-2/6 lg:w-1/4 border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
+            <div className=" flex flex-col w-full border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
               <div>
                 <ImQuotesLeft size={25} />
                 <h1 className=" text-xl font-semibold text-ExtraDarkColor">
@@ -154,25 +168,12 @@ const HomePage = () => {
                 <h2 className=" font-normal text-xl text-left text-black">
                   营养信息
                 </h2>
+                <DetailForm detailFormData={detailFormData} />
               </div>
-
-              <List dense="true">
-                <ListItem className="flex-col items-start">
-                  {content.map((item) => (
-                    <ListItemText
-                      key={item.primary}
-                      primary={item.primary}
-                      secondary={item.secondary}
-                    />
-                  ))}
-                </ListItem>
-              </List>
             </div>
           </div>
         </Grid>
-        {/*<Grid item xs={12} md={4}>*/}
-        {/*    <Item>xs=6 md=4</Item>*/}
-        {/*</Grid>*/}
+        <Grid item xs={12} md={6}></Grid>
         {/*<Grid item xs={12} md={4}>*/}
         {/*    <Item>xs=6 md=4</Item>*/}
         {/*</Grid>*/}
