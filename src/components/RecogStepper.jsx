@@ -42,10 +42,6 @@ export default function RecogStepper(props) {
             <br />
             如要继续识别，请再次点击“选择文件”
           </Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
