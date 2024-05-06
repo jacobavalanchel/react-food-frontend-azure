@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
-  Autocomplete,
   Avatar,
-  Box,
-  Button,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Divider,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  TextField,
 } from "@mui/material";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
@@ -25,42 +16,47 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import InfoIcon from "@mui/icons-material/Info";
 import { useAuth } from "./AuthProvider.jsx";
+import LabelEditor from "./components/LabelEditor.jsx";
+import InfoEditor from "./components/InfoEditor.jsx";
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState({
-    username: "null",
+    username: "",
     userLabelData: [],
+    userLabelCandidates: [],
+    gender: "",
+    age: "",
+    isPregnant: "",
+    email: "",
   });
-  const [userEmail, setUserEmail] = useState("");
-  const [isNewLabelOpen, setIsNewLabelOpen] = useState(false);
-  const [inputValue, setInputValue] = useState();
-  const [labelData, setLabelData] = useState([
-    { key: 0, title: "中年人" },
-    { key: 1, title: "糖尿病患者" },
-    { key: 2, title: "高血压患者" },
-    { key: 3, title: "注重精神健康" },
-    { key: 4, title: "爱吃面食" },
-  ]);
+  const [isLabelEditOpen, setIsLabelEditOpen] = useState(false);
+  const [isInfoEditOpen, setIsInfoEditOpen] = useState(false);
+  const [labelValue, setLabelValue] = useState();
   const { token } = useAuth();
+  useEffect(() => {
+    console.log("userInfo:", userInfo);
+    if (userInfo.username !== "") {
+      handleUpdateUserInfo(userInfo);
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     handleFetchUserInfo();
   }, []); // 第一次载入运行
-  const handleUpdateUserInfo = async () => {
+  const handleUpdateUserInfo = (newUserInfo) => {
     const requestOptions = {
       method: "POST",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(userInfo),
+      body: JSON.stringify(newUserInfo),
     };
-    await fetch("http://127.0.0.1:5000/user/update_info", requestOptions)
+    fetch("http://127.0.0.1:5000/update_info", requestOptions)
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      });
+      .then((data) => {});
   };
-  const handleFetchUserInfo = async () => {
+  const handleFetchUserInfo = () => {
     const requestOptions = {
       method: "POST",
       headers: {
@@ -68,34 +64,44 @@ const MyPage = () => {
         "Content-Type": "application/json",
       },
     };
-    await fetch("http://127.0.0.1:5000/user/get_info", requestOptions)
+    fetch("http://127.0.0.1:5000/get_info", requestOptions)
       .then((response) => response.json())
       .then((data) => {
         setUserInfo(data);
-        console.log(data);
       });
-  };
-  const handleSubmit = () => {
-    if (inputValue !== undefined) {
-      console.log("Submitted Values:", inputValue);
-      const value = inputValue.map((tag, index) => {
-        return { key: index, title: tag };
-      });
-      setLabelData(value);
-      console.log("Values:", value);
-      handleNewLabelInputClose();
-      handleUpdateUserInfo();
-    }
-    setIsNewLabelOpen(false);
   };
 
-  function handleNewLabelInputClose() {
-    setIsNewLabelOpen(false);
+  function handleInfoInputOpen() {
+    setIsInfoEditOpen(true);
+  }
+
+  function handleInfoSubmit() {}
+
+  function handleInfoInputAbort() {
+    setIsInfoEditOpen(false);
   }
 
   function handleLabelInputOpen() {
-    setIsNewLabelOpen(true);
+    setIsLabelEditOpen(true);
   }
+
+  function handleLabelInputAbort() {
+    setIsLabelEditOpen(false);
+  }
+
+  const handleLabelSubmit = () => {
+    if (labelValue !== undefined) {
+      const value = labelValue.map((tag, index) => {
+        return { key: index, title: tag };
+      });
+
+      setUserInfo((prevUserInfo) => ({
+        ...prevUserInfo,
+        userLabelData: value,
+      }));
+    }
+    setIsLabelEditOpen(false);
+  };
 
   function handleLabelClick(data) {}
 
@@ -107,53 +113,29 @@ const MyPage = () => {
           <div className="flex flex-row items-center gap-2">
             <Avatar alt="Personal icon" src="/src/assets/react.svg" />
             <h1 className="font-semibold text-3xl text-center text-black">
-              张三峰
+              {userInfo.username}
             </h1>
           </div>
-          <Dialog open={isNewLabelOpen} PaperProps={{ component: "form" }}>
-            <DialogTitle>告诉我们您的身体情况</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                请输入新的标签以描述您的身体状况。您可以搜索并选择已有的项目，也可以输入自定义项目。
-              </DialogContentText>
-              <Autocomplete
-                multiple
-                id="label-editor"
-                options={labelData.map((option) => option.title)}
-                defaultValue={labelData.map((option) => option.title)}
-                freeSolo
-                name="labels"
-                filterSelectedOptions
-                onChange={(event, newInputValue) => {
-                  setInputValue(newInputValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="filled"
-                    label="freeSolo"
-                    placeholder="Favorites"
-                  />
-                )}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setIsNewLabelOpen(false)}>放弃</Button>
-              <Button onClick={handleSubmit}>确认</Button>
-            </DialogActions>
-          </Dialog>
-          <Box sx={{ display: "flex" }}>
-            <Button
-              color="secondary"
-              variant="outlined"
-              onClick={handleLabelInputOpen}
-            >
-              编辑
-            </Button>
-          </Box>
+          {/*// health label edit*/}
+          <LabelEditor
+            isLabelEditOpen={isLabelEditOpen}
+            userInfo={userInfo}
+            handleLabelInputAbort={handleLabelInputAbort}
+            handleLabelSubmit={handleLabelSubmit}
+            setLabelValue={setLabelValue}
+          />
+          {/*//basic info edit*/}
+          `
+          <InfoEditor
+            isInfoEditOpen={isInfoEditOpen}
+            handleInfoInputAbort={handleInfoInputAbort}
+            handleInfoSubmit={handleInfoSubmit}
+            setUserInfo={setUserInfo}
+            userInfo={userInfo}
+          />
           <div className="flex w-80 flex-row flex-wrap items-center justify-center gap-2">
-            {!isNewLabelOpen &&
-              labelData.map((data) => {
+            {!isLabelEditOpen &&
+              userInfo.userLabelData.map((data) => {
                 return (
                   <Chip
                     key={data.key}
@@ -170,19 +152,19 @@ const MyPage = () => {
         <nav aria-label="main mailbox folders">
           <List>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={handleLabelInputOpen}>
                 <ListItemIcon>
                   <MedicalInformationIcon />
                 </ListItemIcon>
-                <ListItemText primary="更改健康信息" />
+                <ListItemText primary="更改健康标签" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={handleInfoInputOpen}>
                 <ListItemIcon>
                   <SendIcon />
                 </ListItemIcon>
-                <ListItemText primary="消息列表" />
+                <ListItemText primary="更改基本信息" />
               </ListItemButton>
             </ListItem>
             <ListItem disablePadding>
