@@ -1,56 +1,71 @@
 import React from "react";
-import './index.css'
-import {BottomNavigation, BottomNavigationAction, CssBaseline} from "@mui/material";
-import {Route, Routes, useNavigate} from "react-router-dom";
-import Topbar from "./Appbar.jsx"
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import WorkIcon from "@mui/icons-material/Work";
-import ContactMailIcon from "@mui/icons-material/ContactMail";
+import "./index.css";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./Layout.jsx";
 import HomePage from "./HomePage.jsx";
+import SuggestionPage from "./SuggestionPage.jsx";
 import MarketPage from "./MarketPage.jsx";
 import MyPage from "./MyPage.jsx";
-import SuggestionPage from "./SuggestionPage.jsx"
-import {Toaster} from "react-hot-toast";
+import { useAuth } from "./AuthProvider.jsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
+import SignIn from "./SignIn.jsx";
 
 function App() {
-    const navigate = useNavigate();
-    const [currentTab, setCurrentTab] = React.useState(0);
-    return (// <Router>
-        <React.Fragment>
-            <CssBaseline/>
-            {/*//data binding*/}
-            <Topbar/>
-            <Toaster
-                position="top-center"
-            />
-            <div className="App pb-10">
+  const token = useAuth();
 
-                <Routes>
-                    <Route path="/" exact element={<HomePage/>}/>
-                    <Route path="/about" element={<SuggestionPage/>}/>
-                    <Route path="/services" element={<MarketPage/>}/>
-                    <Route path="/contact" element={<MyPage/>}/>
-                </Routes>
+  const routesForPublic = [
+    {
+      path: "/sign-in",
+      element: <SignIn />,
+    },
+    {
+      path: "/home",
+      element: <HomePage />,
+    },
+    {
+      path: "/about",
+      element: <SuggestionPage />,
+    },
+    {
+      path: "/services",
+      element: <MarketPage />,
+    },
+  ];
+  const routesForAuthOnly = [
+    {
+      path: "/",
+      element: <ProtectedRoute redirectIfUnAuth={"/sign-in"} />,
+      children: [
+        {
+          path: "contact",
+          element: <MyPage />,
+        },
+      ],
+    },
+  ];
+  const routesForNotAuthOnly = [];
 
-            </div>
-            <BottomNavigation
-                className="bottomNavigation"
-                value={currentTab}
-                onChange={(event, newValue) => {
-                    setCurrentTab(newValue);
-                    console.log(newValue);
-                }}
-            >
-                <BottomNavigationAction label="Home" icon={<HomeIcon/>} onClick={() => navigate("/")}/>
-                <BottomNavigationAction label="About" icon={<InfoIcon/>} onClick={() => navigate("/about")}/>
-                <BottomNavigationAction label="Services" icon={<WorkIcon/>} onClick={() => navigate("/services")}/>
-                <BottomNavigationAction label="Contact" icon={<ContactMailIcon/>} onClick={() => navigate("/contact")}/>
-            </BottomNavigation>
-
-        </React.Fragment>
-        // </Router>
-    );
+  const router = createBrowserRouter([
+    {
+      path: "",
+      element: <Layout />,
+      children: [
+        ...routesForPublic,
+        ...(!token ? routesForNotAuthOnly : []),
+        ...routesForAuthOnly,
+      ],
+    },
+  ]);
+  console.log(token);
+  const [mode] = React.useState("light");
+  const defaultTheme = createTheme({ palette: { mode } });
+  //store token to localStorage:
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;

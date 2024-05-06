@@ -1,181 +1,185 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Button, Container, List, ListItem, ListItemText, TextField} from "@mui/material";
-import {ImQuotesLeft} from "react-icons/im";
-import {
-    Alert, Checkbox, CircularProgress, FormControlLabel, Snackbar, Typography,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, Grid } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+import * as PropTypes from "prop-types";
+import { ImQuotesLeft } from "react-icons/im";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DetailForm from "./components/DetailForm.jsx";
+import RecogStepper from "./components/RecogStepper.jsx";
+import Typography from "@mui/material/Typography";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
+Item.propTypes = { children: PropTypes.node };
+const synth = window.speechSynthesis; // 启用文本
+const msg = new SpeechSynthesisUtterance(); // 表示一次发音请求。其中包含了将由语音服务朗读的内容，以及如何朗读它（例如：语种、音高、音量）。
 
 const HomePage = () => {
-    const [uploadedFile, setUploadedFile] = useState(null);
-    const [uploadResult, setUploadResult] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [image, setImage] = useState("/assets/img/result-1.jpg");
-    const content = [{primary: "能量", secondary: "245 KCal/500g"}, {
-        primary: "不适宜人群",
-        secondary: "消化不良人群"
-    }, {primary: "适宜人群", secondary: "高糖代谢人群"}, {primary: "特殊营养素", secondary: "麦麸质"}, {
-        primary: "功效",
-        secondary: "养胃健脾"
-    },];
+  const [foodName, setFoodName] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [image, setImage] = useState("/assets/img/result-1.jpg");
+  const [detailData, setDetailData] = useState([]);
+  const handleSpeak = (text) => {
+    msg.text = text;
+    msg.lang = "zh-CN";
+    msg.volume = 1;
+    msg.rate = 1;
+    msg.pitch = 1;
+    synth.speak(msg);
+  };
 
-    function handleUploadPromise(trial) {
-        return new Promise((resolve, reject) => {
-            setTimeout(resolve, 1000, trial);
+  const uploadImage = (file) => {
+    setIsUploading(true);
+    console.log("starting upload");
+    if (!file) {
+      console.log("No file selected");
+    } else {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      fetch("http://127.0.0.1:5000/upload_image", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("File uploaded successfully");
+
+            return response.json();
+          } else {
+            console.error("Failed to upload file");
+
+            setIsUploading(false);
+            throw new Error("Failed to upload file");
+          }
+        })
+        .then((response_json) => {
+          setFoodName(response_json["result"]);
+          setIsUploading(false);
+          handleFetchDetail();
+        })
+
+        .catch((error) => {
+          console.error("Error uploading file:", error);
         });
     }
-
-
-    const handleonClick = () => {
-        handleUploadPromise("trialcontent").then((value) => {
-            console.log(value)
-        })
-    };
-
-    const handleUpload = async () => {
-        console.log("starting upload");
-        if (!uploadedFile) {
-            console.log('No file selected');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('file', uploadedFile);
-
-        try {
-            const response = await fetch('http://127.0.0.1:5000/get_image', {
-                method: 'POST', body: formData,
-            });
-
-            if (response.ok) {
-                console.log('File uploaded successfully');
-                console.log(response);
-                setUploadResult(true);
-
-
-            } else {
-                console.error('Failed to upload file');
-                setUploadResult(false);
-            }
-        } catch (error) {
-            console.error('Error uploading file:', error);
-        }
-    };
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        console.log('file changed');
-        setUploadedFile(file);
-    };
-
-
-    const handleFetchImage = async (filename) => {
-        alert("button pressed");
-        const formData = new FormData();
-        formData.append("file_name", filename);
-        const requestOptions = {
-            method: "POST", body: formData,
-        };
-        const res = await fetch("http://127.0.0.1:5000/get_image", requestOptions);
-        const imageBlob = await res.blob();
-        const imageObjectURL = URL.createObjectURL(imageBlob);
-        setImage(imageObjectURL);
-    };
-    const handleDownload = async (event) => {
-        // trigger detect
-        const triggerFormData = new FormData();
-        triggerFormData.append('name', "trialname");
-        const data = fetch('http://127.0.0.1:5000/start_recog', {
-            method: 'POST', body: triggerFormData,
-
-        }).then((response) => response.json())
-            .then((data) => {
-                console.log(data['filename'])
-                handleFetchImage(data['filename'])
-            });
-
+  };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file !== undefined) {
+      setImage(file);
+      const imageObjectURL = URL.createObjectURL(file);
+      setImage(imageObjectURL);
+      uploadImage(file);
     }
+    console.log(file);
+  };
 
-    return (<div>
-            <div className="min-h-screen px-2 flex flex-col justify-center my-20">
-                {/* heading */}
-                <h1 className="font-semibold text-3xl text-center text-black">
-                    主页
-                </h1>
-                <div
-                    className="py-5 text-black flex flex-col flex-nowrap justify-begin items-center rounded-lg shadow-lg mt-10 cursor-pointer bg-lime-50 hover:bg-lime-100">
-                    {/*<div>*/}
-                    {/*    <img*/}
-                    {/*        src=""*/}
-                    {/*        alt="img"*/}
-                    {/*        className="h-56 2xl:h-64 rounded-t-xl w-full"*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-                    <h2 className=" font-normal text-2xl text-center text-black">
-                        拍照食品健康助手
-                    </h2>
+  const handleFetchDetail = () => {
+    const requestOptions = {
+      method: "POST",
+    };
+    fetch("http://127.0.0.1:5000/get_result_detail", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        setDetailData(data["result_detail"]);
+        setAiResponse(data["ai_response"]);
+      });
+  };
 
-                    <div className="w-3/4 flex flex-row gap-2 justify-center items-center">
+  return (
+    <Box sx={{ flexGrow: 1 }} paddingY={5}>
+      <h1 className="font-semibold text-3xl text-center text-black">主页</h1>
+      <Grid container paddingX={3} spacing={2}>
+        <Grid item xs={12} md={4}>
+          {/* heading */}
 
-                        <Button
-                            variant="contained"
-                            component="label"
-                        >
-                            选择文件
-                            <input
-                                hidden
-                                type="file"
-                                onChange={handleFileChange}
-                                accept="image/gif,image/jpeg,image/jpg,image/png"
-                                multiple
-                            />
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            className="bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
-                            onClick={handleUpload}
-                        >
-                            上传所选
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            className="bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
-                            onClick={handleDownload}
-                        >
-                            {loading && <CircularProgress size={24} />}
-                            getFile
-                        </Button>
-                    </div>
-                    <img
-                        src={image}
-                        alt="img"
-                        className="max-h-50 rounded-t-xl w-full object-cover"
-                    />
-
-                    <div
-                        className=" flex flex-col w-3/4 md:w-2/6 lg:w-1/4 border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
-                        <div>
-                            <ImQuotesLeft size={25}/>
-                            <h1 className=" text-xl font-semibold text-ExtraDarkColor">
-                                识别结果：三明治沙拉
-                            </h1>
-                            <h2 className=" font-normal text-xl text-left text-black">
-                                营养信息
-                            </h2>
-                        </div>
-
-
-                        <List dense="true">
-                            <ListItem className="flex-col items-start">
-                                {content.map((item) => (<ListItemText
-                                    key={item.primary}
-                                    primary={item.primary}
-                                    secondary={item.secondary}
-                                />))}
-                            </ListItem>
-                        </List>
-                    </div>
-                </div>
+          <div className="py-5 text-black flex flex-col flex-nowrap justify-begin items-center rounded-lg shadow-lg mt-10 cursor-pointer bg-lime-50 hover:bg-lime-100">
+            <h2 className=" font-normal text-2xl text-center text-black">
+              拍照食品健康助手
+            </h2>
+            <RecogStepper
+              handleFileChange={handleFileChange}
+              handleUpload={uploadImage}
+              handleFetchDetail={handleFetchDetail}
+            />
+            <div className="w-3/4 flex m-2 flex-row gap-2 justify-center items-center">
+              <LoadingButton
+                loading={isUploading}
+                loadingIndicator="Loading…"
+                variant="contained"
+                component="label"
+              >
+                选择文件
+                <input
+                  hidden
+                  type="file"
+                  onChange={handleFileChange}
+                  accept="image/gif,image/jpeg,image/jpg,image/png"
+                  multiple
+                />
+              </LoadingButton>
             </div>
-        </div>);
+            <img
+              src={image}
+              alt="img"
+              className="max-h-50 rounded-t-xl w-full object-cover"
+            />
+
+            <div className=" flex flex-col w-full border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
+              <div>
+                <ImQuotesLeft size={25} />
+                <h1 className=" text-xl font-semibold text-ExtraDarkColor">
+                  识别结果：{foodName}
+                </h1>
+                <Button
+                  onClick={() => {
+                    handleSpeak(aiResponse);
+                  }}
+                  size="small"
+                >
+                  收听
+                </Button>
+                {aiResponse !== "" && (
+                  <h2 className=" font-normal text-xl text-center text-black">
+                    AI 建议
+                  </h2>
+                )}
+                {aiResponse.split("\n").map((line, index) => (
+                  <Typography variant="h6" component="div" key={index}>
+                    {line.replace(/\n/g, " ")}
+                    <br />
+                  </Typography>
+                ))}
+
+                <h2 className=" font-normal text-xl text-center text-black">
+                  营养信息
+                </h2>
+                <DetailForm detailFormData={detailData} />
+              </div>
+            </div>
+          </div>
+        </Grid>
+        {/*<Grid item xs={12} md={6}>*/}
+        {/*  */}
+        {/*</Grid>*/}
+        {/*<Grid item xs={12} md={4}>*/}
+        {/*    <Item>xs=6 md=4</Item>*/}
+        {/*</Grid>*/}
+        {/*<Grid item xs={12} md={8}>*/}
+        {/*    <Item>xs=6 md=8</Item>*/}
+        {/*</Grid>*/}
+      </Grid>
+    </Box>
+  );
 };
 
 export default HomePage;

@@ -1,42 +1,23 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { CssBaseline } from "@mui/material";
 import App from "./App.jsx";
-import {BrowserRouter, createBrowserRouter, RouterProvider} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import HomePage from "./HomePage.jsx";
 import SuggestionPage from "./SuggestionPage.jsx";
 import MarketPage from "./MarketPage.jsx";
 import MyPage from "./MyPage.jsx";
-import {CssBaseline} from "@mui/material";
+import AuthProvider from "./AuthProvider.jsx";
 
-const router = createBrowserRouter([
-        {
-            path: "/",
-            element: <App/>,
-            children: [
-                {
-                    path: "/home",
-                    element:<HomePage/>,
-                },
-                {
-                    path: "/about",
-                    element:<SuggestionPage/>,
-                },
-                {
-                    path: "/services",
-                    element:<MarketPage/>,
-                },
-                {
-                    path: "/contact",
-                    element:<MyPage/>,
-                }
-            ]
-        }
-    ]
-);
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-      <CssBaseline/>
-      <RouterProvider router={router}/>
+    <CssBaseline />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+
+    {/*<RecogStepper />*/}
+    {/*<RecommendGallery />*/}
+    {/*<FoodCamera />*/}
   </React.StrictMode>,
-)
+);
