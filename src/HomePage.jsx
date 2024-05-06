@@ -98,7 +98,7 @@ const HomePage = () => {
   return (
     <Box sx={{ flexGrow: 1 }} paddingY={5}>
       <h1 className="font-semibold text-3xl text-center text-black">主页</h1>
-      <Grid container paddingX={3} spacing={2}>
+      <Grid container sx={{ paddingX: { xs: 0, sm: 3 } }} spacing={2}>
         <Grid item xs={12} md={4}>
           {/* heading */}
 
