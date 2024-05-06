@@ -27,6 +27,7 @@ const HomePage = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [image, setImage] = useState("/assets/img/result-1.jpg");
   const [detailData, setDetailData] = useState([]);
+  const [activeStep, setActiveStep] = React.useState(0);
   const handleSpeak = (text) => {
     msg.text = text;
     msg.lang = "zh-CN";
@@ -37,14 +38,13 @@ const HomePage = () => {
   };
 
   const uploadImage = (file) => {
-    setIsUploading(true);
+    setActiveStep(1);
     console.log("starting upload");
     if (!file) {
       console.log("No file selected");
     } else {
       const formData = new FormData();
       formData.append("file", file);
-
       fetch("http://127.0.0.1:5000/upload_image", {
         method: "POST",
         body: formData,
@@ -52,11 +52,11 @@ const HomePage = () => {
         .then((response) => {
           if (response.ok) {
             console.log("File uploaded successfully");
-
+            setActiveStep(2);
             return response.json();
           } else {
             console.error("Failed to upload file");
-
+            setActiveStep(0);
             setIsUploading(false);
             throw new Error("Failed to upload file");
           }
@@ -75,12 +75,10 @@ const HomePage = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file !== undefined) {
-      setImage(file);
       const imageObjectURL = URL.createObjectURL(file);
       setImage(imageObjectURL);
       uploadImage(file);
     }
-    console.log(file);
   };
 
   const handleFetchDetail = () => {
@@ -95,6 +93,11 @@ const HomePage = () => {
       });
   };
 
+  function handleUploadButtonClick() {
+    setActiveStep(0);
+    setIsUploading(true);
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }} paddingY={5}>
       <h1 className="font-semibold text-3xl text-center text-black">主页</h1>
@@ -107,6 +110,7 @@ const HomePage = () => {
               拍照食品健康助手
             </h2>
             <RecogStepper
+              activeStep={activeStep}
               handleFileChange={handleFileChange}
               handleUpload={uploadImage}
               handleFetchDetail={handleFetchDetail}
@@ -117,6 +121,7 @@ const HomePage = () => {
                 loadingIndicator="Loading…"
                 variant="contained"
                 component="label"
+                onClick={handleUploadButtonClick}
               >
                 选择文件
                 <input

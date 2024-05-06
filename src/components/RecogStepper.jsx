@@ -14,8 +14,6 @@ const steps = [
 ];
 
 export default function RecogStepper(props) {
-  const [activeStep, setActiveStep] = React.useState(0);
-
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -26,22 +24,23 @@ export default function RecogStepper(props) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
-        {/*{steps.map((step, index) => {*/}
-        {/*  const stepProps = {};*/}
-        {/*  const labelProps = {};*/}
-
-        {/*  return (*/}
-        {/*    <Step key={step.title} {...stepProps}>*/}
-        {/*      <StepLabel {...labelProps}>{step.title}</StepLabel>*/}
-        {/*    </Step>*/}
-        {/*  );*/}
-        {/*})}*/}
+      <Stepper activeStep={props.activeStep}>
+        {steps.map((step, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          return (
+            <Step key={step.title} {...stepProps}>
+              <StepLabel {...labelProps}>{step.title}</StepLabel>
+            </Step>
+          );
+        })}
       </Stepper>
-      {activeStep === steps.length ? (
+      {props.activeStep + 1 === steps.length ? (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+            完成了！请您查看结果
+            <br />
+            如要继续识别，请再次点击“选择文件”
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
@@ -50,14 +49,9 @@ export default function RecogStepper(props) {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          {/*<Typography sx={{ mt: 2, mb: 1 }}>步骤 {activeStep + 1}</Typography>*/}
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </Box>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            步骤 {props.activeStep + 1}:{steps[0].hint}
+          </Typography>
         </React.Fragment>
       )}
     </Box>
