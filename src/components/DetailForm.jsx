@@ -14,25 +14,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Button, Card, CardActions, CardContent, Rating } from "@mui/material";
 
-const synth = window.speechSynthesis; // 启用文本
-const msg = new SpeechSynthesisUtterance(); // 表示一次发音请求。其中包含了将由语音服务朗读的内容，以及如何朗读它（例如：语种、音高、音量）。
-
-// 语音播报的函数
-const handleSpeak = (text) => {
-  msg.text = text; // 文字内容: 测试内容
-  msg.lang = "zh-CN"; // 使用的语言:中文
-  msg.volume = 1; // 声音音量：1
-  msg.rate = 1; // 语速：1
-  msg.pitch = 1; // 音高：1
-  synth.speak(msg); // 播放
-};
-// 语音停止
-const handleStop = (e) => {
-  msg.text = e;
-  msg.lang = "zh-CN";
-  synth.cancel(msg); // 取消该次语音播放
-};
-
 function Section(props) {
   const { section, index } = props;
   const [open, setOpen] = React.useState(false);
@@ -61,8 +42,10 @@ function Section(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    {section.RowLabels.map((label) => (
-                      <TableCell align="left">{label}</TableCell>
+                    {section.RowLabels.map((label, key) => (
+                      <TableCell key={key} align="left">
+                        {label}
+                      </TableCell>
                     ))}
                   </TableRow>
                 </TableHead>
@@ -118,21 +101,14 @@ function Section(props) {
 export default function DetailForm(props) {
   return (
     <>
-      <Button
-        onClick={() => {
-          handleSpeak("您非常适合这个食物");
-        }}
-        size="small"
-      >
-        收听
-      </Button>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead></TableHead>
           <TableBody>
-            {props.detailFormData.map((section, index) => (
-              <Section key={index} section={section} />
-            ))}
+            {props.detailFormData !== null &&
+              props.detailFormData.map((section, index) => (
+                <Section key={index} section={section} />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

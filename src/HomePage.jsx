@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import * as PropTypes from "prop-types";
 import { ImQuotesLeft } from "react-icons/im";
+import LoadingButton from "@mui/lab/LoadingButton";
 import DetailForm from "./components/DetailForm.jsx";
+import RecogStepper from "./components/RecogStepper.jsx";
+import Typography from "@mui/material/Typography";
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -22,98 +18,83 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 Item.propTypes = { children: PropTypes.node };
+const synth = window.speechSynthesis; // 启用文本
+const msg = new SpeechSynthesisUtterance(); // 表示一次发音请求。其中包含了将由语音服务朗读的内容，以及如何朗读它（例如：语种、音高、音量）。
+
 const HomePage = () => {
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const [uploadResult, setUploadResult] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [foodName, setFoodName] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const [image, setImage] = useState("/assets/img/result-1.jpg");
+  const [detailData, setDetailData] = useState([]);
+  const handleSpeak = (text) => {
+    msg.text = text;
+    msg.lang = "zh-CN";
+    msg.volume = 1;
+    msg.rate = 1;
+    msg.pitch = 1;
+    synth.speak(msg);
+  };
 
-  const detailFormData = [
-    {
-      name: "能量供给",
-      score: 3.5,
-      scoreLabel: "比较建议",
-      scoreText: "这个食品非常适合你吃",
-      RowLabels: ["项目", "当前值", "建议值", "单位"],
-      RowContents: [
-        ["碳水化合物", 6, 12, "mg"],
-        ["脂肪", 6, 12, "mg"],
-        ["蛋白质", 6, 12, "mg"],
-      ],
-    },
-    {
-      name: "糖代谢",
-      score: 4.5,
-      scoreLabel: "适合",
-      scoreText: "这个食品糖:",
-      RowLabels: ["项目", "当前值", "建议值", "单位"],
-      RowContents: [
-        ["纤维素", 6, 12, "mg"],
-        ["游离糖", 6, 12, "mg"],
-        ["GI数", 6, 12, "mg"],
-      ],
-    },
-  ];
-  const handleUpload = async () => {
+  const uploadImage = (file) => {
+    setIsUploading(true);
     console.log("starting upload");
-    if (!uploadedFile) {
+    if (!file) {
       console.log("No file selected");
-      return;
-    }
+    } else {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    const formData = new FormData();
-    formData.append("file", uploadedFile);
-
-    try {
-      const response = await fetch("http://127.0.0.1:5000/get_image", {
+      fetch("http://127.0.0.1:5000/upload_image", {
         method: "POST",
         body: formData,
-      });
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("File uploaded successfully");
 
-      if (response.ok) {
-        console.log("File uploaded successfully");
-        console.log(response);
-        setUploadResult(true);
-      } else {
-        console.error("Failed to upload file");
-        setUploadResult(false);
-      }
-    } catch (error) {
-      console.error("Error uploading file:", error);
+            return response.json();
+          } else {
+            console.error("Failed to upload file");
+
+            setIsUploading(false);
+            throw new Error("Failed to upload file");
+          }
+        })
+        .then((response_json) => {
+          setFoodName(response_json["result"]);
+          setIsUploading(false);
+          handleFetchDetail();
+        })
+
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+        });
     }
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log("file changed");
-    setUploadedFile(file);
+    if (file !== undefined) {
+      setImage(file);
+      const imageObjectURL = URL.createObjectURL(file);
+      setImage(imageObjectURL);
+      uploadImage(file);
+    }
+    console.log(file);
   };
-  const handleFetchImage = async (filename) => {
-    alert("button pressed");
-    const formData = new FormData();
-    formData.append("file_name", filename);
+
+  const handleFetchDetail = () => {
     const requestOptions = {
       method: "POST",
-      body: formData,
     };
-    const res = await fetch("http://127.0.0.1:5000/get_image", requestOptions);
-    const imageBlob = await res.blob();
-    const imageObjectURL = URL.createObjectURL(imageBlob);
-    setImage(imageObjectURL);
-  };
-  const handleDownload = async (event) => {
-    // trigger detect
-    const triggerFormData = new FormData();
-    triggerFormData.append("name", "trialname");
-    const data = fetch("http://127.0.0.1:5000/start_recog", {
-      method: "POST",
-      body: triggerFormData,
-    })
+    fetch("http://127.0.0.1:5000/get_result_detail", requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data["filename"]);
-        handleFetchImage(data["filename"]);
+        setDetailData(data["result_detail"]);
+        setAiResponse(data["ai_response"]);
       });
   };
+
   return (
     <Box sx={{ flexGrow: 1 }} paddingY={5}>
       <h1 className="font-semibold text-3xl text-center text-black">主页</h1>
@@ -125,9 +106,18 @@ const HomePage = () => {
             <h2 className=" font-normal text-2xl text-center text-black">
               拍照食品健康助手
             </h2>
-
-            <div className="w-3/4 flex flex-row gap-2 justify-center items-center">
-              <Button variant="contained" component="label">
+            <RecogStepper
+              handleFileChange={handleFileChange}
+              handleUpload={uploadImage}
+              handleFetchDetail={handleFetchDetail}
+            />
+            <div className="w-3/4 flex m-2 flex-row gap-2 justify-center items-center">
+              <LoadingButton
+                loading={isUploading}
+                loadingIndicator="Loading…"
+                variant="contained"
+                component="label"
+              >
                 选择文件
                 <input
                   hidden
@@ -136,22 +126,7 @@ const HomePage = () => {
                   accept="image/gif,image/jpeg,image/jpg,image/png"
                   multiple
                 />
-              </Button>
-              <Button
-                variant="outlined"
-                className="bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
-                onClick={handleUpload}
-              >
-                上传所选
-              </Button>
-              <Button
-                variant="outlined"
-                className="bg-lime-300 hover:bg-lime-400 active:bg-lime-500 text-black px-4 py-2 font-medium "
-                onClick={handleDownload}
-              >
-                {loading && <CircularProgress size={24} />}
-                getFile
-              </Button>
+              </LoadingButton>
             </div>
             <img
               src={image}
@@ -163,17 +138,39 @@ const HomePage = () => {
               <div>
                 <ImQuotesLeft size={25} />
                 <h1 className=" text-xl font-semibold text-ExtraDarkColor">
-                  识别结果：三明治沙拉
+                  识别结果：{foodName}
                 </h1>
-                <h2 className=" font-normal text-xl text-left text-black">
+                <Button
+                  onClick={() => {
+                    handleSpeak(aiResponse);
+                  }}
+                  size="small"
+                >
+                  收听
+                </Button>
+                {aiResponse !== "" && (
+                  <h2 className=" font-normal text-xl text-center text-black">
+                    AI 建议
+                  </h2>
+                )}
+                {aiResponse.split("\n").map((line, index) => (
+                  <Typography variant="h6" component="div" key={index}>
+                    {line.replace(/\n/g, " ")}
+                    <br />
+                  </Typography>
+                ))}
+
+                <h2 className=" font-normal text-xl text-center text-black">
                   营养信息
                 </h2>
-                <DetailForm detailFormData={detailFormData} />
+                <DetailForm detailFormData={detailData} />
               </div>
             </div>
           </div>
         </Grid>
-        <Grid item xs={12} md={6}></Grid>
+        {/*<Grid item xs={12} md={6}>*/}
+        {/*  */}
+        {/*</Grid>*/}
         {/*<Grid item xs={12} md={4}>*/}
         {/*    <Item>xs=6 md=4</Item>*/}
         {/*</Grid>*/}
