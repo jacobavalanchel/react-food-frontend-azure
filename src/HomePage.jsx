@@ -28,6 +28,7 @@ const HomePage = () => {
   const [image, setImage] = useState("/assets/img/result-1.jpg");
   const [detailData, setDetailData] = useState([]);
   const [activeStep, setActiveStep] = React.useState(0);
+
   const handleSpeak = (text) => {
     msg.text = text;
     msg.lang = "zh-CN";
@@ -101,6 +102,7 @@ const HomePage = () => {
   return (
     <Box sx={{ flexGrow: 1 }} paddingY={5}>
       <h1 className="font-semibold text-3xl text-center text-black">主页</h1>
+
       <Grid container sx={{ paddingX: { xs: 0, sm: 3 } }} spacing={2}>
         <Grid item xs={12} md={4}>
           {/* heading */}
@@ -109,6 +111,7 @@ const HomePage = () => {
             <h2 className=" font-normal text-2xl text-center text-black">
               拍照食品健康助手
             </h2>
+
             <RecogStepper
               activeStep={activeStep}
               handleFileChange={handleFileChange}
@@ -118,12 +121,12 @@ const HomePage = () => {
             <div className="w-3/4 flex m-2 flex-row gap-2 justify-center items-center">
               <LoadingButton
                 loading={isUploading}
-                loadingIndicator="Loading…"
+                loadingIndicator="处理中"
                 variant="contained"
                 component="label"
                 onClick={handleUploadButtonClick}
               >
-                选择文件
+                拍摄上传
                 <input
                   hidden
                   type="file"
@@ -138,7 +141,6 @@ const HomePage = () => {
               alt="img"
               className="max-h-50 rounded-t-xl w-full object-cover"
             />
-
             <div className=" flex flex-col w-full border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
               <div>
                 <ImQuotesLeft size={25} />
