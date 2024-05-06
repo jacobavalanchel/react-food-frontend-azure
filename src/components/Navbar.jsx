@@ -21,22 +21,22 @@ const Navbar = () => {
       }}
     >
       <BottomNavigationAction
-        label="Home"
+        label="主页"
         icon={<HomeIcon />}
         onClick={() => navigate("/home")}
       />
       <BottomNavigationAction
-        label="About"
+        label="健康指南"
         icon={<InfoIcon />}
         onClick={() => navigate("/about")}
       />
       <BottomNavigationAction
-        label="Services"
+        label="商城"
         icon={<WorkIcon />}
         onClick={() => navigate("/services")}
       />
       <BottomNavigationAction
-        label="Contact"
+        label="我"
         icon={<ContactMailIcon />}
         onClick={() => navigate("/contact")}
       />
