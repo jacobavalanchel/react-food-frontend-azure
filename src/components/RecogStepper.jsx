@@ -6,7 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const steps = [
   { title: "拍摄上传", hint: "请拍摄上传您的食物" },
   { title: "系统处理", hint: "正在生成您的个性化内容，请稍等" },
@@ -36,13 +36,25 @@ export default function RecogStepper(props) {
         })}
       </Stepper>
       {props.activeStep + 1 === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            完成了！请您查看结果
-            <br />
-            如要继续识别，请再次点击“选择文件”
-          </Typography>
-        </React.Fragment>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            borderRadius: 4,
+            padding: 2,
+          }}
+        >
+          <CheckCircleIcon />
+          <>
+            {" "}
+            <Typography>
+              完成了！请您查看结果
+              <br />
+              如要继续识别，请再次点击“选择文件”
+            </Typography>
+          </>
+        </Box>
       ) : (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>

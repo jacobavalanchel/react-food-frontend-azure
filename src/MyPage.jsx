@@ -18,6 +18,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { useAuth } from "./AuthProvider.jsx";
 import HealthLabelEditor from "./components/HealthLabelEditor.jsx";
 import InfoEditor from "./components/InfoEditor.jsx";
+import toast from "react-hot-toast";
 
 const MyPage = () => {
   const [userInfo, setUserInfo] = useState({
@@ -103,6 +104,7 @@ const MyPage = () => {
         PA: PA,
         userLabelData: labelValue,
       }));
+      toast.success("信息修改成功！");
     }
     setIsLabelEditOpen(false);
   };

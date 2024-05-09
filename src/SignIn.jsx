@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -12,11 +13,10 @@ import {
   PasswordElement,
   TextFieldElement,
 } from "react-hook-form-mui";
-import Layout from "./Layout.jsx";
-import { Alert, Button, CircularProgress, Stack } from "@mui/material";
-import { useState } from "react";
+import { Alert, Button, CircularProgress, Link, Stack } from "@mui/material";
 import { useAuth } from "./AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 const defaultTheme = createTheme();
 
@@ -26,39 +26,42 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const { setToken } = useAuth();
   const navigate = useNavigate();
-  const onSignUp = async (data) => {};
-  const onLogin = async (data) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const onFormSubmit = (data) => {
+    onLogin(data);
+  };
+  const onSignUp = (data) => {};
+  const onLogin = (data) => {
     setLoading(true);
-    try {
-      const response = await fetch("http://127.0.0.1:5000/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-        signal: AbortSignal.timeout(10000),
-      });
-      const json_response = await response.json();
-      console.log(json_response["result"]);
-      if (json_response["result"] === "success") {
-        setResult("success");
-        setResultInfo(json_response["info"]);
-        alert(json_response["access_token"]);
-        setToken(json_response["access_token"]);
-        setTimeout(() => {
-          navigate("../contact", { replace: true });
-          navigate(0);
-        }, 2000);
-      } else {
+    fetch("http://127.0.0.1:5000/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(10000),
+    })
+      .then((response) => response.json)
+      .then((result) => {
+        if (result["result"] === "success") {
+          setResult("success");
+          setResultInfo(result["info"]);
+          setToken(result["access_token"]);
+          setTimeout(() => {
+            navigate("../contact", { replace: true });
+            navigate(0);
+          }, 2000);
+        } else {
+          setResult("error");
+          setResultInfo(result["info"]);
+          setToken(null);
+        }
+      })
+      .catch((e) => {
         setResult("error");
-        setResultInfo(json_response["info"]);
-        setToken(null);
-      }
-    } catch (e) {
-      setResult("error");
-      setLoading(false);
-      setResultInfo("error occurred");
-    }
+        setLoading(false);
+        setResultInfo("error occurred");
+      });
     setLoading(false);
   };
 
@@ -77,7 +80,10 @@ export default function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
-          <FormContainer onSuccess={onLogin}>
+          <Typography variant="h4" gutterBottom>
+            {isLogin ? "登录" : "注册"}
+          </Typography>
+          <FormContainer onSuccess={onFormSubmit}>
             <FormErrorProvider
               onError={(error) => {
                 return error.message;
@@ -86,12 +92,22 @@ export default function SignIn() {
               <Stack spacing={2} direction="column">
                 <TextFieldElement required label={"Email"} name={"email"} />
                 <PasswordElement required label={"密码"} name={"password"} />
-                <CheckboxElement
-                  name={"agree"}
-                  label={"Agree"}
-                  required
-                  onChange={(ev, checked) => console.log(ev, checked)}
-                />
+                {!isLogin && (
+                  <>
+                    <PasswordElement
+                      required
+                      label={"确认密码"}
+                      name={"password-confirm"}
+                    />
+                    <CheckboxElement
+                      name={"agree"}
+                      label={"我同意用户协议"}
+                      required
+                      onChange={(ev, checked) => console.log(ev, checked)}
+                    />
+                  </>
+                )}
+
                 {result === "success" && (
                   <Alert severity="success">{resultInfo}</Alert>
                 )}
@@ -103,19 +119,17 @@ export default function SignIn() {
                   variant={"contained"}
                   color={"primary"}
                   disabled={loading}
-                  // onClick={onLogin}
                 >
-                  {loading && <CircularProgress size={24} />} Sign In
+                  {loading && <CircularProgress size={24} />}{" "}
+                  {isLogin ? "登录 " : "注册 "}
                 </Button>
-                <Button
-                  type={"submit"}
-                  variant={"contained"}
-                  color={"primary"}
-                  disabled={loading}
-                  // onClick={onSignUp}
-                >
-                  {loading && <CircularProgress size={24} />} Sign Up
-                </Button>
+
+                <Typography variant="body1" style={{ marginTop: "1rem" }}>
+                  {isLogin ? "还没有账户么? " : "已有账户了么? "}
+                  <Link href="#" onClick={() => setIsLogin(!isLogin)}>
+                    {isLogin ? "点此处注册" : "点此处登录"}
+                  </Link>
+                </Typography>
               </Stack>
             </FormErrorProvider>
           </FormContainer>

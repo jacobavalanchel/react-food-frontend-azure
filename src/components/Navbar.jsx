@@ -17,7 +17,6 @@ const Navbar = () => {
       value={currentTab}
       onChange={(event, newValue) => {
         setCurrentTab(newValue);
-        console.log(newValue);
       }}
     >
       <BottomNavigationAction
@@ -26,7 +25,7 @@ const Navbar = () => {
         onClick={() => navigate("/home")}
       />
       <BottomNavigationAction
-        label="健康指南"
+        label="健康贴士"
         icon={<InfoIcon />}
         onClick={() => navigate("/about")}
       />
