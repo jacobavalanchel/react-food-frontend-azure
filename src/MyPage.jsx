@@ -16,7 +16,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import InfoIcon from "@mui/icons-material/Info";
 import { useAuth } from "./AuthProvider.jsx";
-import LabelEditor from "./components/LabelEditor.jsx";
+import HealthLabelEditor from "./components/HealthLabelEditor.jsx";
 import InfoEditor from "./components/InfoEditor.jsx";
 
 const MyPage = () => {
@@ -27,14 +27,17 @@ const MyPage = () => {
     gender: "",
     age: "",
     isPregnant: "",
+    PA: "",
     email: "",
   });
+
   const [isLabelEditOpen, setIsLabelEditOpen] = useState(false);
   const [isInfoEditOpen, setIsInfoEditOpen] = useState(false);
-  const [labelValue, setLabelValue] = useState();
+  const [labelValue, setLabelValue] = useState(userInfo.userLabelData);
+  const [PA, setPA] = useState(userInfo.PA);
+
   const { token } = useAuth();
   useEffect(() => {
-    console.log("userInfo:", userInfo);
     if (userInfo.username !== "") {
       handleUpdateUserInfo(userInfo);
     }
@@ -68,6 +71,8 @@ const MyPage = () => {
       .then((response) => response.json())
       .then((data) => {
         setUserInfo(data);
+        setPA(data.PA);
+        setLabelValue(data.userLabelData);
       });
   };
 
@@ -91,13 +96,12 @@ const MyPage = () => {
 
   const handleLabelSubmit = () => {
     if (labelValue !== undefined) {
-      const value = labelValue.map((tag, index) => {
-        return { key: index, title: tag };
-      });
+      console.log(labelValue);
 
       setUserInfo((prevUserInfo) => ({
         ...prevUserInfo,
-        userLabelData: value,
+        PA: PA,
+        userLabelData: labelValue,
       }));
     }
     setIsLabelEditOpen(false);
@@ -117,15 +121,18 @@ const MyPage = () => {
             </h1>
           </div>
           {/*// health label edit*/}
-          <LabelEditor
+          <HealthLabelEditor
             isLabelEditOpen={isLabelEditOpen}
             userInfo={userInfo}
             handleLabelInputAbort={handleLabelInputAbort}
             handleLabelSubmit={handleLabelSubmit}
+            labelValue={labelValue}
             setLabelValue={setLabelValue}
+            PA={PA}
+            setPA={setPA}
           />
           {/*//basic info edit*/}
-          `
+
           <InfoEditor
             isInfoEditOpen={isInfoEditOpen}
             handleInfoInputAbort={handleInfoInputAbort}
@@ -135,11 +142,11 @@ const MyPage = () => {
           />
           <div className="flex w-80 flex-row flex-wrap items-center justify-center gap-2">
             {!isLabelEditOpen &&
-              userInfo.userLabelData.map((data) => {
+              userInfo.userLabelData.map((data, index) => {
                 return (
                   <Chip
-                    key={data.key}
-                    label={data.title}
+                    key={index}
+                    label={data}
                     onClick={() => handleLabelClick(data)}
                   />
                 );

@@ -28,11 +28,9 @@ export default function InfoEditor(props) {
   };
   return (
     <Dialog open={props.isInfoEditOpen} PaperProps={{ component: "form" }}>
-      <DialogTitle>告诉我们您的身体情况</DialogTitle>
+      <DialogTitle>告诉我们您的基本信息</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          请输入新的标签以描述您的身体状况。您可以搜索并选择已有的项目，也可以输入自定义项目。
-        </DialogContentText>
+        <DialogContentText>请在此编辑您的信息。</DialogContentText>
         <form onSubmit={handleSubmit}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField

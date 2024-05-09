@@ -44,7 +44,12 @@ function Section(props) {
                   <TableRow>
                     {section.RowLabels.map((label, key) => (
                       <TableCell key={key} align="left">
-                        {label}
+                        {label.split("\n").map((line, index) => (
+                          <>
+                            {line.replace(/\n/g, " ")}
+                            <br />
+                          </>
+                        ))}
                       </TableCell>
                     ))}
                   </TableRow>
