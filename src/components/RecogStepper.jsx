@@ -6,7 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
-
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const steps = [
   { title: "拍摄上传", hint: "请拍摄上传您的食物" },
   { title: "系统处理", hint: "正在生成您的个性化内容，请稍等" },
@@ -14,8 +14,6 @@ const steps = [
 ];
 
 export default function RecogStepper(props) {
-  const [activeStep, setActiveStep] = React.useState(0);
-
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -26,38 +24,42 @@ export default function RecogStepper(props) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
-        {/*{steps.map((step, index) => {*/}
-        {/*  const stepProps = {};*/}
-        {/*  const labelProps = {};*/}
-
-        {/*  return (*/}
-        {/*    <Step key={step.title} {...stepProps}>*/}
-        {/*      <StepLabel {...labelProps}>{step.title}</StepLabel>*/}
-        {/*    </Step>*/}
-        {/*  );*/}
-        {/*})}*/}
+      <Stepper activeStep={props.activeStep}>
+        {steps.map((step, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          return (
+            <Step key={step.title} {...stepProps}>
+              <StepLabel {...labelProps}>{step.title}</StepLabel>
+            </Step>
+          );
+        })}
       </Stepper>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
+      {props.activeStep + 1 === steps.length ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            borderRadius: 4,
+            padding: 2,
+          }}
+        >
+          <CheckCircleIcon />
+          <>
+            {" "}
+            <Typography>
+              完成了！请您查看结果
+              <br />
+              如要继续识别，请再次点击“选择文件”
+            </Typography>
+          </>
+        </Box>
       ) : (
         <React.Fragment>
-          {/*<Typography sx={{ mt: 2, mb: 1 }}>步骤 {activeStep + 1}</Typography>*/}
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </Box>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            步骤 {props.activeStep + 1}:{steps[0].hint}
+          </Typography>
         </React.Fragment>
       )}
     </Box>

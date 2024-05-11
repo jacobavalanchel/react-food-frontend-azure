@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, CardContent, Grid } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import * as PropTypes from "prop-types";
@@ -8,6 +8,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import DetailForm from "./components/DetailForm.jsx";
 import RecogStepper from "./components/RecogStepper.jsx";
 import Typography from "@mui/material/Typography";
+import HearingIcon from "@mui/icons-material/Hearing";
+import toast from "react-hot-toast";
+import Collapse from "@mui/material/Collapse";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -22,11 +25,14 @@ const synth = window.speechSynthesis; // 启用文本
 const msg = new SpeechSynthesisUtterance(); // 表示一次发音请求。其中包含了将由语音服务朗读的内容，以及如何朗读它（例如：语种、音高、音量）。
 
 const HomePage = () => {
+  const [expanded, setExpanded] = useState(false);
   const [foodName, setFoodName] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [image, setImage] = useState("/assets/img/result-1.jpg");
   const [detailData, setDetailData] = useState([]);
+  const [activeStep, setActiveStep] = React.useState(0);
+
   const handleSpeak = (text) => {
     msg.text = text;
     msg.lang = "zh-CN";
@@ -37,14 +43,12 @@ const HomePage = () => {
   };
 
   const uploadImage = (file) => {
-    setIsUploading(true);
-    console.log("starting upload");
+    setActiveStep(1);
+
     if (!file) {
-      console.log("No file selected");
     } else {
       const formData = new FormData();
       formData.append("file", file);
-
       fetch("http://127.0.0.1:5000/upload_image", {
         method: "POST",
         body: formData,
@@ -52,11 +56,12 @@ const HomePage = () => {
         .then((response) => {
           if (response.ok) {
             console.log("File uploaded successfully");
-
+            setActiveStep(2);
+            toast.success("完成了！请您查看结果");
             return response.json();
           } else {
             console.error("Failed to upload file");
-
+            setActiveStep(0);
             setIsUploading(false);
             throw new Error("Failed to upload file");
           }
@@ -75,12 +80,10 @@ const HomePage = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file !== undefined) {
-      setImage(file);
       const imageObjectURL = URL.createObjectURL(file);
       setImage(imageObjectURL);
       uploadImage(file);
     }
-    console.log(file);
   };
 
   const handleFetchDetail = () => {
@@ -95,76 +98,143 @@ const HomePage = () => {
       });
   };
 
+  function handleUploadButtonClick() {
+    setActiveStep(0);
+    setIsUploading(true);
+  }
+
   return (
     <Box sx={{ flexGrow: 1 }} paddingY={5}>
-      <h1 className="font-semibold text-3xl text-center text-black">主页</h1>
-      <Grid container paddingX={3} spacing={2}>
+      <h1 className="font-semibold text-3xl text-center text-black">
+        拍照食品健康助手
+      </h1>
+
+      <Grid container sx={{ paddingX: { xs: 0, sm: 3 } }} spacing={2}>
         <Grid item xs={12} md={4}>
           {/* heading */}
 
           <div className="py-5 text-black flex flex-col flex-nowrap justify-begin items-center rounded-lg shadow-lg mt-10 cursor-pointer bg-lime-50 hover:bg-lime-100">
             <h2 className=" font-normal text-2xl text-center text-black">
-              拍照食品健康助手
+              拍照识别
             </h2>
+
             <RecogStepper
+              activeStep={activeStep}
               handleFileChange={handleFileChange}
               handleUpload={uploadImage}
               handleFetchDetail={handleFetchDetail}
             />
-            <div className="w-3/4 flex m-2 flex-row gap-2 justify-center items-center">
-              <LoadingButton
-                loading={isUploading}
-                loadingIndicator="Loading…"
-                variant="contained"
-                component="label"
-              >
-                选择文件
-                <input
-                  hidden
-                  type="file"
-                  onChange={handleFileChange}
-                  accept="image/gif,image/jpeg,image/jpg,image/png"
-                  multiple
-                />
-              </LoadingButton>
-            </div>
-            <img
-              src={image}
-              alt="img"
-              className="max-h-50 rounded-t-xl w-full object-cover"
-            />
-
             <div className=" flex flex-col w-full border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
-              <div>
-                <ImQuotesLeft size={25} />
+              <div className="relative w-full">
+                <img
+                  // sx={{ maxHeight: "200px" }}
+                  src={image}
+                  alt="img"
+                  className="max-h-44  rounded-t-xl w-full object-cover"
+                />
+                <LoadingButton
+                  loading={isUploading}
+                  loadingIndicator="处理中"
+                  variant="contained"
+                  component="label"
+                  onClick={handleUploadButtonClick}
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  拍摄上传
+                  <input
+                    hidden
+                    type="file"
+                    onChange={handleFileChange}
+                    accept="image/gif,image/jpeg,image/jpg,image/png"
+                    multiple
+                  />
+                </LoadingButton>
+              </div>
+
+              {activeStep === 2 && (
                 <h1 className=" text-xl font-semibold text-ExtraDarkColor">
                   识别结果：{foodName}
                 </h1>
-                <Button
-                  onClick={() => {
-                    handleSpeak(aiResponse);
-                  }}
-                  size="small"
-                >
-                  收听
-                </Button>
-                {aiResponse !== "" && (
-                  <h2 className=" font-normal text-xl text-center text-black">
-                    AI 建议
-                  </h2>
-                )}
+              )}
+            </div>
+            {aiResponse !== "" && (
+              <div className=" flex flex-col w-full border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
+                <h1 className=" text-xl font-semibold text-ExtraDarkColor">
+                  AI 建议
+                </h1>
+
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <ImQuotesLeft size={25} />
+                  <Button
+                    onClick={() => {
+                      handleSpeak(aiResponse);
+                    }}
+                    size="small"
+                    variant="outlined"
+                    className="px-2"
+                    startIcon={<HearingIcon />}
+                  >
+                    收听
+                  </Button>
+                </Box>
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                  <CardContent>
+                    <Typography paragraph>Method:</Typography>
+                    <Typography paragraph>
+                      Heat 1/2 cup of the broth in a pot until simmering, add
+                      saffron and set aside for 10 minutes.
+                    </Typography>
+                    <Typography paragraph>
+                      Heat oil in a (14- to 16-inch) paella pan or a large, deep
+                      skillet over medium-high heat. Add chicken, shrimp and
+                      chorizo, and cook, stirring occasionally until lightly
+                      browned, 6 to 8 minutes. Transfer shrimp to a large plate
+                      and set aside, leaving chicken and chorizo in the pan. Add
+                      pimentón, bay leaves, garlic, tomatoes, onion, salt and
+                      pepper, and cook, stirring often until thickened and
+                      fragrant, about 10 minutes. Add saffron broth and
+                      remaining 4 1/2 cups chicken broth; bring to a boil.
+                    </Typography>
+                    <Typography paragraph>
+                      Add rice and stir very gently to distribute. Top with
+                      artichokes and peppers, and cook without stirring, until
+                      most of the liquid is absorbed, 15 to 18 minutes. Reduce
+                      heat to medium-low, add reserved shrimp and mussels,
+                      tucking them down into the rice, and cook again without
+                      stirring, until mussels have opened and rice is just
+                      tender, 5 to 7 minutes more. (Discard any mussels that
+                      don&apos;t open.)
+                    </Typography>
+                    <Typography>
+                      Set aside off of the heat to let rest for 10 minutes, and
+                      then serve.
+                    </Typography>
+                  </CardContent>
+                </Collapse>
                 {aiResponse.split("\n").map((line, index) => (
-                  <Typography variant="h6" component="div" key={index}>
+                  <Typography
+                    className="px-5"
+                    variant="h6"
+                    component="div"
+                    key={index}
+                  >
                     {line.replace(/\n/g, " ")}
                     <br />
                   </Typography>
                 ))}
-
-                <h2 className=" font-normal text-xl text-center text-black">
-                  营养信息
-                </h2>
-                <DetailForm detailFormData={detailData} />
               </div>
+            )}
+            <div className=" flex flex-col w-full border-2 border-lime-400 rounded-lg bg-lime-50 hover:bg-lime-100 active:bg-lime-500 transition duration-300 ease-in-out cursor-pointer">
+              <h1 className=" text-xl font-semibold text-ExtraDarkColor">
+                营养信息：
+              </h1>
+
+              <DetailForm detailFormData={detailData} />
             </div>
           </div>
         </Grid>
